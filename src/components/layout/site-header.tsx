@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { MessageCircle, Search } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
+import { HeaderSearch } from "@/components/layout/header-search";
 import { Button } from "@/components/ui/button";
+import { getProducts } from "@/lib/api";
 import { createWhatsappLink } from "@/lib/whatsapp";
 
 const categoryLinks = [
@@ -18,11 +20,13 @@ const categoryLinks = [
   { label: "Sale & Offers", href: "/products" },
 ];
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const { products } = await getProducts(1, 50);
+
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white">
       <div className="flex h-8 items-center justify-center bg-stone-950 px-4 text-center text-[12px] font-bold tracking-[0.03em] text-white sm:text-[13px]">
-        Authentic beauty picks • WhatsApp support • Delivery available
+        Authentic beauty picks | WhatsApp support | Delivery available
       </div>
       <div className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-2 px-3 py-2 sm:h-[68px] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-0 lg:px-8">
@@ -46,14 +50,7 @@ export function SiteHeader() {
             </Button>
           </div>
 
-          <Link
-            href="/products"
-            className="flex h-10 w-full items-center gap-3 rounded-full border border-stone-300 bg-stone-50 px-4 text-sm font-medium text-stone-500 transition-colors hover:border-stone-500 hover:bg-white sm:h-11 sm:max-w-[520px] sm:flex-1 sm:text-[15px]"
-            aria-label="Search beauty products"
-          >
-            <Search className="size-4 shrink-0 text-stone-500 sm:size-5" />
-            <span>Search beauty products</span>
-          </Link>
+          <HeaderSearch products={products} />
 
           <Button asChild className="hidden h-11 rounded-full bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-black sm:inline-flex">
             <Link
