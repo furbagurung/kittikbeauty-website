@@ -21,29 +21,49 @@ const categoryLinks = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white">
-      <div className="mx-auto flex h-12 w-full max-w-[1304px] items-center justify-between gap-2 px-3 sm:h-14 sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0 text-base font-bold tracking-[0.06em] text-stone-950 uppercase sm:text-xl sm:tracking-[0.08em]" aria-label="Kittik Beauty home">
-          Kittik Beauty
-        </Link>
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-          <Button asChild variant="ghost" className="h-9 rounded-md px-2 text-[15px] font-bold text-stone-950 sm:h-10 sm:px-4" aria-label="Search products">
-            <Link href="/products">
-              <Search className="size-4 sm:size-5" />
-              <span className="hidden sm:inline">Search</span>
+      <div className="flex h-8 items-center justify-center bg-stone-950 px-4 text-center text-[12px] font-bold tracking-[0.03em] text-white sm:text-[13px]">
+        Authentic beauty picks • WhatsApp support • Delivery available
+      </div>
+      <div className="border-b border-stone-200 bg-white">
+        <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-2 px-3 py-2 sm:h-[68px] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-0 lg:px-8">
+          <div className="flex min-h-10 items-center justify-between gap-3 sm:min-h-0">
+            <Link
+              href="/"
+              className="shrink-0 text-base font-bold tracking-[0.12em] text-stone-950 uppercase sm:text-xl sm:tracking-[0.16em]"
+              aria-label="Kittik Beauty home"
+            >
+              Kittik Beauty
             </Link>
-          </Button>
-          <Button asChild className="hidden h-10 rounded-md bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-stone-800 sm:inline-flex">
+            <Button asChild className="h-9 rounded-full bg-stone-950 px-3 text-sm font-bold text-white hover:bg-black sm:hidden">
+              <Link
+                href={createWhatsappLink("Hi, I want to ask about Kittik Beauty products.")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="size-4" />
+                WhatsApp
+              </Link>
+            </Button>
+          </div>
+
+          <Link
+            href="/products"
+            className="flex h-10 w-full items-center gap-3 rounded-full border border-stone-300 bg-stone-50 px-4 text-sm font-medium text-stone-500 transition-colors hover:border-stone-500 hover:bg-white sm:h-11 sm:max-w-[520px] sm:flex-1 sm:text-[15px]"
+            aria-label="Search beauty products"
+          >
+            <Search className="size-4 shrink-0 text-stone-500 sm:size-5" />
+            <span>Search beauty products</span>
+          </Link>
+
+          <Button asChild className="hidden h-11 rounded-full bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-black sm:inline-flex">
             <Link
               href={createWhatsappLink("Hi, I want to ask about Kittik Beauty products.")}
               target="_blank"
               rel="noopener noreferrer"
             >
               <MessageCircle className="size-4" />
-              Contact
+              WhatsApp
             </Link>
-          </Button>
-          <Button asChild className="h-9 rounded-md bg-stone-950 px-3 text-sm font-bold text-white hover:bg-stone-800 sm:hidden">
-            <Link href="/products">Shop</Link>
           </Button>
         </div>
       </div>
@@ -51,7 +71,11 @@ export function SiteHeader() {
         <div className="no-scrollbar mx-auto w-full max-w-[1600px] touch-pan-x overflow-x-auto overscroll-x-contain scroll-smooth px-4 sm:px-6 lg:px-8">
           <div className="flex h-10 min-w-max items-center justify-start gap-6 whitespace-nowrap text-xs font-bold sm:h-11 sm:gap-8 sm:text-sm lg:justify-center xl:gap-10">
             {categoryLinks.map((item) => (
-              <Link key={item.label} href={item.href} className="inline-flex h-full items-center whitespace-nowrap px-0.5 transition-colors hover:text-stone-300 sm:px-0">
+              <Link
+                key={item.label}
+                href={item.href}
+                className="inline-flex h-full items-center whitespace-nowrap border-b-2 border-transparent px-0.5 transition-colors hover:border-white/80 hover:text-white/90 sm:px-0"
+              >
                 {item.label}
               </Link>
             ))}
