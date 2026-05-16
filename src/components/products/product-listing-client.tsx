@@ -23,7 +23,7 @@ export function ProductListingClient({
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState(initialSort);
-  const [visible, setVisible] = useState(12);
+  const [visible, setVisible] = useState(24);
 
   const categories = useMemo(() => {
     return Array.from(new Set(products.map((product) => product.categoryName).filter(Boolean))).sort() as string[];
@@ -51,7 +51,7 @@ export function ProductListingClient({
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
-                setVisible(12);
+                setVisible(24);
               }}
               placeholder="Search products"
               className="h-11 rounded-md border-stone-300 bg-white pl-11 text-base font-medium shadow-none sm:h-[52px] sm:pl-12"
@@ -61,7 +61,7 @@ export function ProductListingClient({
             value={category}
             onValueChange={(value) => {
               setCategory(value);
-              setVisible(12);
+              setVisible(24);
             }}
           >
             <SelectTrigger className="h-11 w-full rounded-md border-stone-300 bg-white px-4 font-medium shadow-none sm:h-[52px]">
@@ -108,7 +108,7 @@ export function ProductListingClient({
           <Button
             variant="outline"
             className="h-11 rounded-md border-stone-950 bg-white px-8 font-bold"
-            onClick={() => setVisible((current) => current + 12)}
+            onClick={() => setVisible((current) => current + 24)}
           >
             Load more
           </Button>

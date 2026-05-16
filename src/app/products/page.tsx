@@ -12,7 +12,7 @@ type ProductsPageProps = {
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
-  const { products } = await getProducts(1, 12);
+  const { products } = await getProducts(1, 24);
   const initialCategory = params?.category ? decodeURIComponent(params.category) : "all";
   const initialSort = params?.sort === "price-asc" || params?.sort === "price-desc" ? params.sort : "latest";
 
