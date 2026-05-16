@@ -1,0 +1,31 @@
+name: Deploy Kittik Beauty Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            cd ${{ secrets.VPS_PROJECT_PATH }}
+
+            git pull origin main
+
+            npm install
+            npm run build
+
+            pm2 restart ${{ secrets.PM2_PROCESS_NAME }}
+            pm2 save
