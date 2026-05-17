@@ -10,7 +10,7 @@ import { PageShell } from "@/components/shared/page-shell";
 import { ProductGrid } from "@/components/products/product-grid";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
-import { getCategories, getProducts } from "@/lib/api";
+import { getCategories, getProducts, getSubCategories } from "@/lib/api";
 
 const title = "Kittik Beauty | Makeup, Skincare & Beauty Products in Nepal";
 const description =
@@ -34,12 +34,17 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [categories, arrivals] = await Promise.all([getCategories(), getProducts(1, 8)]);
+  const [categories, catalog, subCategories] = await Promise.all([
+    getCategories(),
+    getProducts(1, 160),
+    getSubCategories(),
+  ]);
+  const arrivals = catalog.products.slice(0, 8);
 
   return (
     <PageShell>
-      <Hero products={arrivals.products} />
-      <CategorySection categories={categories} />
+      <Hero products={arrivals} />
+      <CategorySection categories={categories} products={catalog.products} subCategories={subCategories} />
       <section id="new-arrivals" className="border-b border-stone-200 bg-white py-10 sm:py-16">
         <div className="mx-auto w-full max-w-[1304px] px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -56,7 +61,7 @@ export default async function Home() {
             }
           />
           <div className="mt-6 sm:mt-9">
-            <ProductGrid products={arrivals.products} />
+            <ProductGrid products={arrivals} />
           </div>
         </div>
       </section>
