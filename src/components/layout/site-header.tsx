@@ -22,7 +22,7 @@ const categoryLinks: HeaderCategoryLink[] = [
   { label: "Tools & Brushes", categoryAliases: ["tools-and-brushes", "tools-brushes"] },
   { label: "Bath & Body", categoryAliases: ["bath-and-body", "bath-body"] },
   { label: "Mini Size", categoryAliases: ["mini-size"] },
-  { label: "Brands", href: "/products" },
+  { label: "Brands", href: "/products/brands" },
   { label: "Gifts & Value Sets", categoryAliases: ["gifts-and-value-sets", "gifts-value-sets"] },
   { label: "Sale & Offers", categoryAliases: ["sale-and-offers", "sale-offers", "sale"] },
 ];

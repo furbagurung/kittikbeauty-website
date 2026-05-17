@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { ProductListingClient } from "@/components/products/product-listing-client";
 import { PageShell } from "@/components/shared/page-shell";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -6,9 +8,42 @@ import { getProducts } from "@/lib/api";
 type ProductsPageProps = {
   searchParams?: Promise<{
     category?: string;
+    search?: string;
     sort?: string;
   }>;
 };
+
+const title = "Shop Beauty Products Online in Nepal | Kittik Beauty";
+const description =
+  "Browse makeup, skincare, haircare, perfume, and beauty essentials online at Kittik Beauty. Explore curated products with prices, details, and WhatsApp buying support.";
+
+export async function generateMetadata({ searchParams }: ProductsPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const hasQuery = Boolean(params && Object.keys(params).length);
+
+  return {
+    title: {
+      absolute: title,
+    },
+    description,
+    alternates: {
+      canonical: "/products",
+    },
+    robots: hasQuery
+      ? {
+          index: false,
+          follow: true,
+        }
+      : undefined,
+    openGraph: {
+      title,
+      description,
+      url: "/products",
+      siteName: "Kittik Beauty",
+      type: "website",
+    },
+  };
+}
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;

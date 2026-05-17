@@ -6,6 +6,25 @@ export type Category = {
   description?: string | null;
 };
 
+export type SubCategory = {
+  id: string;
+  name: string;
+  slug?: string;
+  image?: string | null;
+  description?: string | null;
+  categoryId?: string | null;
+  category?: Category | null;
+};
+
+export type Brand = {
+  id: string;
+  name: string;
+  slug?: string;
+  logo?: string | null;
+  image?: string | null;
+  description?: string | null;
+};
+
 export type ProductVariant = {
   id?: string;
   name?: string;
@@ -23,6 +42,12 @@ export type Product = {
   category?: Category | null;
   categoryId?: string | null;
   categoryName?: string | null;
+  subCategory?: SubCategory | null;
+  subCategoryId?: string | null;
+  subCategoryName?: string | null;
+  brand?: Brand | null;
+  brandId?: string | null;
+  brandName?: string | null;
   price?: number | null;
   compareAtPrice?: number | null;
   stock?: number | null;

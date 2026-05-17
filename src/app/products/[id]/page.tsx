@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckCircle2, ChevronLeft, Headphones, MapPin, ShieldCheck, Truck } from "lucide-react";
@@ -16,6 +17,45 @@ type ProductDetailPageProps = {
     image?: string;
   }>;
 };
+
+export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const currentId = decodeURIComponent(id);
+  const product = await getProductById(currentId);
+
+  if (!product) {
+    return {
+      title: "Product",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
+  const title = `Buy ${product.name} in Nepal | Kittik Beauty`;
+  const description = `Buy ${product.name} at Kittik Beauty. View price, product details, category, shade options, and ask or order through WhatsApp support in Nepal.`;
+  const canonical = `/products/${encodeURIComponent(product.slug || product.id)}`;
+  const images = product.image ? [{ url: product.image, alt: product.name }] : undefined;
+
+  return {
+    title: {
+      absolute: title,
+    },
+    description,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Kittik Beauty",
+      type: "website",
+      images,
+    },
+  };
+}
 
 function isSameProduct(product: Product, currentProduct: Product, currentId: string) {
   return (

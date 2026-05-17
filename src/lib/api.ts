@@ -1,5 +1,5 @@
-import type { Category, PaginatedProducts, Product, ProductVariant } from "@/types/product";
-import { productMatchesCategory, slugifyCategory } from "@/lib/category-utils";
+import type { Brand, Category, PaginatedProducts, Product, ProductVariant, SubCategory } from "@/types/product";
+import { productMatchesBrand, productMatchesCategory, productMatchesSubCategory, slugifyCategory } from "@/lib/category-utils";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://kittikbeauty.com/api";
 
@@ -108,6 +108,50 @@ function normalizeCategory(value: unknown): Category | null {
   };
 }
 
+function normalizeSubCategory(value: unknown): SubCategory | null {
+  if (typeof value === "string") {
+    return { id: value, name: value };
+  }
+  if (!isRecord(value)) return null;
+
+  const category = normalizeCategory(value.category);
+  const name = firstString(value.name, value.title, value.label, value.subCategoryName);
+  const id = firstString(value.id, value._id, value.slug, name);
+  if (!id || !name) return null;
+
+  return {
+    id,
+    name,
+    slug: firstString(value.slug),
+    image: absolutizeImage(firstString(value.image, value.imageUrl, value.thumbnail)),
+    description: firstString(value.description) ?? null,
+    categoryId: firstString(value.categoryId, value.category_id, category?.id) ?? null,
+    category,
+  };
+}
+
+function normalizeBrand(value: unknown): Brand | null {
+  if (typeof value === "string") {
+    return { id: value, name: value };
+  }
+  if (!isRecord(value)) return null;
+
+  const name = firstString(value.name, value.title, value.label, value.brandName);
+  const id = firstString(value.id, value._id, value.slug, name);
+  if (!id || !name) return null;
+
+  const logo = absolutizeImage(firstString(value.logo, value.image, value.imageUrl, value.thumbnail));
+
+  return {
+    id,
+    name,
+    slug: firstString(value.slug),
+    logo,
+    image: logo,
+    description: firstString(value.description) ?? null,
+  };
+}
+
 function normalizeVariant(value: unknown): ProductVariant | null {
   if (!isRecord(value)) return null;
   return {
@@ -128,6 +172,8 @@ export function normalizeProduct(value: unknown): Product | null {
   if (!id || !name) return null;
 
   const category = normalizeCategory(value.category ?? value.categories);
+  const subCategory = normalizeSubCategory(value.subCategory ?? value.subcategory);
+  const brand = normalizeBrand(value.brand);
   const rawImages = [
     value.image,
     value.imageUrl,
@@ -157,6 +203,13 @@ export function normalizeProduct(value: unknown): Product | null {
     category,
     categoryId: firstString(value.categoryId, value.category_id, value.categoryID, category?.id) ?? null,
     categoryName: category?.name ?? firstString(value.categoryName, value.category) ?? null,
+    subCategory,
+    subCategoryId:
+      firstString(value.subCategoryId, value.subcategoryId, value.sub_category_id, subCategory?.id) ?? null,
+    subCategoryName: subCategory?.name ?? firstString(value.subCategoryName, value.subcategoryName, value.subCategory) ?? null,
+    brand,
+    brandId: firstString(value.brandId, value.brand_id, brand?.id) ?? null,
+    brandName: brand?.name ?? firstString(value.brandName, value.brand) ?? null,
     price: firstNumber(value.price, value.salePrice, value.finalPrice, value.mrp),
     compareAtPrice: firstNumber(value.compareAtPrice, value.regularPrice, value.mrp),
     stock: firstNumber(value.stock, value.quantity, value.inventory),
@@ -216,6 +269,24 @@ export async function getProductsByCategory(category: Category, limit = 50): Pro
   return products.filter((product) => productMatchesCategory(product, category));
 }
 
+export async function getProductsBySubCategory(
+  category: Category,
+  subCategory: SubCategory,
+  limit = 100,
+): Promise<Product[]> {
+  const { products } = await getProducts(1, Math.max(limit, 100));
+
+  return products.filter(
+    (product) => productMatchesCategory(product, category) && productMatchesSubCategory(product, subCategory),
+  );
+}
+
+export async function getProductsByBrand(brand: Brand, limit = 100): Promise<Product[]> {
+  const { products } = await getProducts(1, Math.max(limit, 100));
+
+  return products.filter((product) => productMatchesBrand(product, brand));
+}
+
 export async function getCategories(): Promise<Category[]> {
   try {
     const payload = await fetchJson("/categories");
@@ -245,6 +316,28 @@ export async function getCategories(): Promise<Category[]> {
     }
 
     return categoriesByKey.size ? Array.from(categoriesByKey.values()) : fallbackCategories;
+  }
+}
+
+export async function getSubCategories(): Promise<SubCategory[]> {
+  try {
+    const payload = await fetchJson("/sub-categories");
+    return extractArray(payload, ["subCategories", "subcategories", "data", "items", "results"])
+      .map(normalizeSubCategory)
+      .filter((subCategory): subCategory is SubCategory => Boolean(subCategory));
+  } catch {
+    return [];
+  }
+}
+
+export async function getBrands(): Promise<Brand[]> {
+  try {
+    const payload = await fetchJson("/brands");
+    return extractArray(payload, ["brands", "data", "items", "results"])
+      .map(normalizeBrand)
+      .filter((brand): brand is Brand => Boolean(brand));
+  } catch {
+    return [];
   }
 }
 

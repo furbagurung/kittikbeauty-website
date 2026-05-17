@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -10,6 +11,27 @@ import { ProductGrid } from "@/components/products/product-grid";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
 import { getCategories, getProducts } from "@/lib/api";
+
+const title = "Kittik Beauty | Makeup, Skincare & Beauty Products in Nepal";
+const description =
+  "Shop curated makeup, skincare, haircare, perfume, and beauty essentials at Kittik Beauty. Discover authentic products with WhatsApp support and delivery in Nepal.";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: title,
+  },
+  description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title,
+    description,
+    url: "/",
+    siteName: "Kittik Beauty",
+    type: "website",
+  },
+};
 
 export default async function Home() {
   const [categories, arrivals] = await Promise.all([getCategories(), getProducts(1, 8)]);
