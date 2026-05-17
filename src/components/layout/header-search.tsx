@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, X } from "lucide-react";
+import { Camera, ChevronDown, ChevronLeft, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ProductImage } from "@/components/products/product-image";
@@ -16,6 +16,19 @@ type HeaderSearchProps = {
 type SearchSurface = "desktop" | "mobile";
 
 const popularSearches = ["Sunscreen", "Lip tint", "Mascara", "Serum", "Eyeliner", "Blush", "Moisturizer", "Foundation"];
+
+const mobileDiscoverySearches = [
+  "Sunscreen For Daily Use",
+  "Lip Tint For Everyday",
+  "Waterproof Mascara",
+  "Face Serum",
+  "Eyeliner",
+  "Blush",
+  "Moisturizer",
+  "Foundation",
+  "Makeup Brushes",
+  "Hair Care",
+];
 
 const categoryShortcuts = [
   { label: "Makeup", href: "/products?category=Makeup" },
@@ -51,6 +64,7 @@ export function HeaderSearch({ products }: HeaderSearchProps) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileDiscoveryExpanded, setMobileDiscoveryExpanded] = useState(false);
   const trimmedQuery = query.trim();
   const hasTypedQuery = trimmedQuery.length > 0;
   const showDesktopPanel = !mobileOpen && open;
@@ -118,6 +132,7 @@ export function HeaderSearch({ products }: HeaderSearchProps) {
   function closeMobileSearch() {
     setOpen(false);
     setMobileOpen(false);
+    setMobileDiscoveryExpanded(false);
     setQuery("");
   }
 
@@ -337,6 +352,80 @@ export function HeaderSearch({ products }: HeaderSearchProps) {
     return hasTypedQuery ? renderTypedState(surface) : renderEmptyState(surface);
   }
 
+  function renderMobileDiscovery() {
+    const visibleSearches = mobileDiscoveryExpanded ? mobileDiscoverySearches : mobileDiscoverySearches.slice(0, 6);
+
+    return (
+      <section className="px-5 pt-8">
+        <h2 className="text-[26px] font-bold leading-none tracking-tight text-stone-950">Search Discovery</h2>
+        <div className="mt-7 flex flex-wrap gap-3">
+          {visibleSearches.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => goToResults(item)}
+              className="min-h-14 rounded bg-stone-50 px-6 text-left text-[22px] font-medium leading-tight text-stone-950 transition-colors hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+            >
+              {item}
+            </button>
+          ))}
+          {!mobileDiscoveryExpanded ? (
+            <button
+              type="button"
+              onClick={() => setMobileDiscoveryExpanded(true)}
+              className="inline-flex min-h-14 items-center gap-2 rounded bg-white px-6 text-[22px] font-medium leading-tight text-stone-950 transition-colors hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+            >
+              More
+              <ChevronDown className="size-5 text-stone-500" />
+            </button>
+          ) : null}
+        </div>
+      </section>
+    );
+  }
+
+  function renderMobileTypedSearch() {
+    const noResults = suggestions.length === 0;
+
+    return (
+      <div className="px-5 pt-8">
+        {noResults ? (
+          <section>
+            <h2 className="text-[26px] font-bold leading-none tracking-tight text-stone-950">Search Discovery</h2>
+            <div className="mt-5 rounded bg-stone-50 px-4 py-5">
+              <p className="text-[17px] font-bold text-stone-950">No products found for &quot;{trimmedQuery}&quot;</p>
+              <p className="mt-1 text-sm text-stone-500">Try another keyword.</p>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {mobileDiscoverySearches.slice(0, 6).map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => goToResults(item)}
+                  className="min-h-12 rounded bg-stone-50 px-5 text-left text-lg font-medium leading-tight text-stone-950 transition-colors hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <section>
+            <h2 className="text-[26px] font-bold leading-none tracking-tight text-stone-950">Product Suggestions</h2>
+            <div className="mt-5 space-y-2">{suggestions.map((product) => renderProductResult(product, "mobile"))}</div>
+            <button
+              type="button"
+              onClick={() => goToResults()}
+              className="mt-5 flex min-h-12 w-full items-center justify-center rounded bg-stone-950 px-5 text-base font-bold text-white transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+            >
+              View all results
+            </button>
+          </section>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className="relative z-50 w-full font-sans sm:max-w-[520px] sm:flex-1">
       <button
@@ -362,22 +451,67 @@ export function HeaderSearch({ products }: HeaderSearchProps) {
       {mobileOpen ? (
         <div className="fixed inset-0 z-[100] bg-white sm:hidden">
           <div className="flex min-h-dvh flex-col">
-            <div className="flex items-center justify-between border-b border-stone-200 px-4 py-4">
-              <p className="text-sm font-bold tracking-[0.12em] text-stone-950 uppercase">Kittik Beauty</p>
+            <div className="flex items-center gap-3 px-3 pt-5">
               <button
                 type="button"
                 onClick={closeMobileSearch}
-                className="min-h-10 px-1 text-sm font-bold text-stone-950 transition-colors hover:text-stone-600"
+                className="flex size-12 shrink-0 items-center justify-center text-stone-950 transition-colors hover:text-stone-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+                aria-label="Close search"
               >
-                Cancel
+                <ChevronLeft className="size-10 stroke-[2.4]" />
               </button>
-            </div>
-            <div className="border-b border-stone-200 px-4 py-3">
-              <div className="flex h-11 w-full items-center gap-3 rounded-full border border-stone-300 bg-stone-50 px-4 text-sm font-medium text-stone-950 focus-within:border-stone-950 focus-within:bg-white">
-                {renderSearchInput("mobile")}
+              <div className="flex h-16 min-w-0 flex-1 overflow-hidden rounded-[14px] border-[3px] border-stone-950 bg-white min-[420px]:h-[72px]">
+                <input
+                  ref={mobileInputRef}
+                  value={query}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setOpen(true);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") {
+                      event.preventDefault();
+                      closeMobileSearch();
+                    }
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      goToResults();
+                    }
+                  }}
+                  className="min-w-0 flex-1 bg-transparent px-4 text-[19px] font-medium text-stone-950 outline-none placeholder:text-stone-400 min-[420px]:px-5 min-[420px]:text-[22px]"
+                  placeholder="Search beauty products"
+                  aria-label="Search beauty products"
+                  type="text"
+                  autoComplete="off"
+                />
+                {query ? (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="flex w-11 shrink-0 items-center justify-center text-stone-500 transition-colors hover:text-stone-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-stone-950"
+                    aria-label="Clear search"
+                  >
+                    <X className="size-6" />
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className="flex w-12 shrink-0 items-center justify-center text-stone-400 transition-colors hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-stone-950 min-[420px]:w-14"
+                  aria-label="Search by image"
+                >
+                  <Camera className="size-8 stroke-[2.3]" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToResults()}
+                  className="m-1 flex w-14 shrink-0 items-center justify-center rounded-[9px] bg-black text-white transition-colors hover:bg-stone-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-white min-[420px]:w-16"
+                  aria-label="Search"
+                >
+                  <Search className="size-8 stroke-[2.6] min-[420px]:size-9" />
+                </button>
               </div>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-24 pt-4">{renderSearchContent("mobile")}</div>
+            <div className="min-h-0 flex-1 overflow-y-auto pb-24">{hasTypedQuery ? renderMobileTypedSearch() : renderMobileDiscovery()}</div>
           </div>
         </div>
       ) : null}

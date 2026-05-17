@@ -4,7 +4,7 @@ import { CheckCircle2, ChevronLeft, Headphones, MapPin, ShieldCheck, Truck } fro
 
 import { ProductCard } from "@/components/products/product-card";
 import { ProductDetailActions } from "@/components/products/product-detail-actions";
-import { ProductImage } from "@/components/products/product-image";
+import { ProductDetailGallery } from "@/components/products/product-detail-gallery";
 import { PageShell } from "@/components/shared/page-shell";
 import { getProductById, getProducts } from "@/lib/api";
 import { formatPrice, stockLabel } from "@/lib/product-utils";
@@ -12,6 +12,9 @@ import type { Product } from "@/types/product";
 
 type ProductDetailPageProps = {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{
+    image?: string;
+  }>;
 };
 
 function isSameProduct(product: Product, currentProduct: Product, currentId: string) {
@@ -41,8 +44,13 @@ function uniqueProducts(products: Product[]) {
   });
 }
 
-export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+function isString(value: string | null | undefined): value is string {
+  return Boolean(value);
+}
+
+export default async function ProductDetailPage({ params, searchParams }: ProductDetailPageProps) {
   const { id } = await params;
+  const query = await searchParams;
   const currentId = decodeURIComponent(id);
   const product = await getProductById(currentId);
 
@@ -57,7 +65,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const recommendedProducts = uniqueProducts([...sameCategoryProducts, ...otherProducts]).slice(0, 4);
 
   const variant = product.variants[0];
-  const gallery = product.images.length ? product.images : [product.image].filter(Boolean);
+  const gallery = product.images.length ? product.images : [product.image].filter(isString);
+  const requestedImageIndex = Number(query?.image ?? 1) - 1;
+  const selectedImageIndex = Number.isFinite(requestedImageIndex)
+    ? Math.min(Math.max(requestedImageIndex, 0), Math.max(gallery.slice(0, 6).length - 1, 0))
+    : 0;
   const currentStatus = stockLabel(product);
   const availabilityLabel = currentStatus.toLowerCase() === "active" ? "Available" : currentStatus;
   const productDetails = product.description?.trim() || "Product information is being updated.";
@@ -65,63 +77,40 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   return (
     <PageShell>
-      <section className="bg-white py-4 sm:py-7">
+      <section className="bg-white py-3 sm:py-7">
         <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-6">
-          <Link href="/products" className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-stone-600 hover:text-stone-950 sm:mb-6">
+          <Link href="/products" className="mb-3 inline-flex min-h-9 items-center gap-2 text-sm font-bold text-stone-600 hover:text-stone-950 sm:mb-6 sm:min-h-0">
             <ChevronLeft className="size-4" />
             Back to products
           </Link>
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(480px,0.9fr)] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(520px,0.88fr)]">
-            <div className="space-y-3 sm:space-y-4">
-              <div className="relative aspect-square overflow-hidden border border-stone-200 bg-stone-50">
-                <ProductImage
-                  src={gallery[0] ?? null}
-                  alt={product.name}
-                  priority
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  className="object-contain p-3 sm:p-6"
-                />
-              </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 sm:grid sm:grid-cols-6 sm:gap-3 sm:overflow-visible sm:pb-0">
-                {gallery.slice(0, 6).map((image, index) => (
-                  <div
-                    key={`${image}-${index}`}
-                    className={`relative aspect-square w-20 shrink-0 overflow-hidden border bg-stone-50 transition-colors duration-200 sm:w-auto ${
-                      index === 0 ? "border-stone-950" : "border-stone-200 hover:border-stone-500"
-                    }`}
-                  >
-                    <ProductImage src={image} alt={`${product.name} ${index + 1}`} sizes="120px" className="object-contain p-2.5" />
-                    {index === 0 ? <span className="absolute inset-x-0 bottom-0 h-0.5 bg-stone-950" /> : null}
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(480px,0.9fr)] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(520px,0.88fr)]">
+            <ProductDetailGallery productName={product.name} images={gallery} selectedIndex={selectedImageIndex} />
 
             <div className="flex flex-col justify-start">
-              <div className="sticky top-24 bg-white lg:border-l lg:border-stone-200 lg:pl-10 xl:pl-12">
-                <p className="text-xs font-bold tracking-[0.08em] text-stone-500 uppercase">{product.categoryName ?? "Kittik Beauty"}</p>
-                <h1 className="mt-3 text-2xl font-bold leading-[1.15] tracking-tight text-stone-950 sm:text-4xl sm:leading-tight">{product.name}</h1>
-                <div className="mt-4 flex flex-col gap-3 sm:mt-5">
-                  <p className="text-[28px] font-bold tracking-tight text-stone-950 sm:text-3xl">{formatPrice(product.price)}</p>
-                  <div className="inline-flex w-fit items-center gap-2 border border-stone-200 px-3 py-2 text-sm font-bold text-stone-950">
+              <div className="bg-white lg:sticky lg:top-24 lg:border-l lg:border-stone-200 lg:pl-10 xl:pl-12">
+                <p className="text-[11px] font-bold tracking-[0.08em] text-stone-500 uppercase sm:text-xs">{product.categoryName ?? "Kittik Beauty"}</p>
+                <h1 className="mt-2 text-[22px] font-bold leading-[1.18] tracking-tight text-stone-950 min-[420px]:text-2xl sm:mt-3 sm:text-4xl sm:leading-tight">{product.name}</h1>
+                <div className="mt-3 flex items-center justify-between gap-3 sm:mt-5 sm:flex-col sm:items-start">
+                  <p className="text-[25px] font-bold tracking-tight text-stone-950 sm:text-3xl">{formatPrice(product.price)}</p>
+                  <div className="inline-flex w-fit shrink-0 items-center gap-2 border border-stone-200 px-2.5 py-1.5 text-xs font-bold text-stone-950 sm:px-3 sm:py-2 sm:text-sm">
                     <span className="size-2 rounded-full bg-emerald-600" />
                     {availabilityLabel}
                   </div>
                 </div>
 
                 {optionLabel || product.variants.length > 1 ? (
-                  <div className="mt-6 sm:mt-8">
-                    <p className="text-sm font-bold tracking-[0.02em] text-stone-950 uppercase">
+                  <div className="mt-4 sm:mt-8">
+                    <p className="text-xs font-bold tracking-[0.02em] text-stone-950 uppercase sm:text-sm">
                       {variant?.shade ? "Shade" : "Option"}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {optionLabel ? (
-                        <span className="border border-stone-950 px-4 py-3 text-sm font-bold text-stone-950">{optionLabel}</span>
+                        <span className="border border-stone-950 px-3 py-2 text-sm font-bold text-stone-950 sm:px-4 sm:py-3">{optionLabel}</span>
                       ) : null}
                       {product.variants.slice(optionLabel ? 1 : 0, 8).map((item, index) => (
                         <span
                           key={item.id ?? `${item.name}-${index}`}
-                          className="border border-stone-200 px-4 py-3 text-sm font-bold text-stone-700 hover:border-stone-500"
+                          className="border border-stone-200 px-3 py-2 text-sm font-bold text-stone-700 hover:border-stone-500 sm:px-4 sm:py-3"
                         >
                           {item.shade ?? item.name ?? `Variant ${index + 1}`}
                         </span>
@@ -130,37 +119,37 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                   </div>
                 ) : null}
 
-                <div className="mt-6 grid gap-2 sm:mt-8">
-                  <div className="flex items-center gap-3 bg-blue-50 px-3 py-3 text-sm leading-5 text-stone-950 sm:px-4">
-                    <MapPin className="size-5 shrink-0 text-stone-950" />
+                <div className="mt-5 sm:mt-8">
+                  <ProductDetailActions productName={product.name} />
+                </div>
+
+                <div className="mt-4 grid gap-2 sm:mt-8">
+                  <div className="flex items-start gap-2.5 bg-blue-50 px-3 py-2.5 text-xs leading-5 text-stone-950 sm:items-center sm:gap-3 sm:px-4 sm:py-3 sm:text-sm">
+                    <MapPin className="mt-0.5 size-4 shrink-0 text-stone-950 sm:mt-0 sm:size-5" />
                     <span>
                       <span className="font-medium">Inside Kathmandu Valley</span> - <span className="font-bold">Support available today</span>
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 bg-blue-50 px-3 py-3 text-sm leading-5 text-stone-950 sm:px-4">
-                    <Truck className="size-5 shrink-0 text-stone-950" />
+                  <div className="flex items-start gap-2.5 bg-blue-50 px-3 py-2.5 text-xs leading-5 text-stone-950 sm:items-center sm:gap-3 sm:px-4 sm:py-3 sm:text-sm">
+                    <Truck className="mt-0.5 size-4 shrink-0 text-stone-950 sm:mt-0 sm:size-5" />
                     <span>
                       <span className="font-medium">Outside Valley</span> - <span className="font-bold">Delivery available</span>
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-6 sm:mt-8">
-                  <ProductDetailActions productName={product.name} />
-                </div>
-
-                <div className="mt-6 divide-y divide-stone-200 border-y border-stone-200 sm:mt-8">
+                <div className="mt-5 divide-y divide-stone-200 border-y border-stone-200 sm:mt-8">
                   <details className="group">
-                    <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
                       Description
                       <span className="text-lg leading-none text-stone-500 transition-transform duration-200 group-open:rotate-45">+</span>
                     </summary>
-                    <div className="max-w-[62ch] pb-5 pr-2 text-sm leading-7 text-stone-600">
+                    <div className="max-w-[62ch] pb-4 pr-1 text-sm leading-6 text-stone-600 sm:pb-5 sm:pr-2 sm:leading-7">
                       {productDetails}
                     </div>
                   </details>
                   <details className="group">
-                    <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
                       Product details
                       <span className="text-lg leading-none text-stone-500 transition-transform duration-200 group-open:rotate-45">+</span>
                     </summary>
@@ -184,37 +173,37 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                     </div>
                   </details>
                   <details className="group">
-                    <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
                       Delivery
                       <span className="text-lg leading-none text-stone-500 transition-transform duration-200 group-open:rotate-45">+</span>
                     </summary>
-                    <p className="pb-5 text-sm leading-7 text-stone-600">
+                    <p className="pb-4 text-sm leading-6 text-stone-600 sm:pb-5 sm:leading-7">
                       Delivery is available inside Kathmandu Valley and outside Valley. Message us on WhatsApp to confirm timing for your location.
                     </p>
                   </details>
                   <details className="group">
-                    <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
+                    <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between py-3 text-sm font-bold tracking-[0.02em] text-stone-950 uppercase sm:py-5">
                       Support
                       <span className="text-lg leading-none text-stone-500 transition-transform duration-200 group-open:rotate-45">+</span>
                     </summary>
-                    <p className="pb-5 text-sm leading-7 text-stone-600">
+                    <p className="pb-4 text-sm leading-6 text-stone-600 sm:pb-5 sm:leading-7">
                       Ask about shade, usage, availability, or delivery directly through WhatsApp before buying.
                     </p>
                   </details>
                 </div>
 
-                <div className="mt-5 grid grid-cols-1 gap-3 border-b border-stone-200 pb-6 sm:grid-cols-3 sm:gap-4 lg:grid-cols-1 xl:grid-cols-3">
-                  <div className="flex items-center gap-3 text-stone-950">
-                    <ShieldCheck className="size-6 text-stone-950" />
-                    <span className="text-sm font-bold leading-snug">Authentic products</span>
+                <div className="mt-4 grid grid-cols-3 gap-2 border-b border-stone-200 pb-5 sm:mt-5 sm:gap-4 sm:pb-6 lg:grid-cols-1 xl:grid-cols-3">
+                  <div className="flex flex-col items-center gap-2 text-center text-stone-950 sm:flex-row sm:text-left">
+                    <ShieldCheck className="size-5 text-stone-950 sm:size-6" />
+                    <span className="text-[11px] font-bold leading-snug sm:text-sm">Authentic products</span>
                   </div>
-                  <div className="flex items-center gap-3 text-stone-950">
-                    <Headphones className="size-6 text-stone-950" />
-                    <span className="text-sm font-bold leading-snug">WhatsApp support</span>
+                  <div className="flex flex-col items-center gap-2 text-center text-stone-950 sm:flex-row sm:text-left">
+                    <Headphones className="size-5 text-stone-950 sm:size-6" />
+                    <span className="text-[11px] font-bold leading-snug sm:text-sm">WhatsApp support</span>
                   </div>
-                  <div className="flex items-center gap-3 text-stone-950">
-                    <CheckCircle2 className="size-6 text-stone-950" />
-                    <span className="text-sm font-bold leading-snug">Delivery available</span>
+                  <div className="flex flex-col items-center gap-2 text-center text-stone-950 sm:flex-row sm:text-left">
+                    <CheckCircle2 className="size-5 text-stone-950 sm:size-6" />
+                    <span className="text-[11px] font-bold leading-snug sm:text-sm">Delivery available</span>
                   </div>
                 </div>
               </div>
