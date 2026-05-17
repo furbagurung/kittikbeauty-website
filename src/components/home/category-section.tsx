@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { SectionHeading } from "@/components/shared/section-heading";
+import { categoryHref } from "@/lib/category-utils";
 import type { Category } from "@/types/product";
 
 export function CategorySection({ categories }: { categories: Category[] }) {
@@ -17,7 +18,7 @@ export function CategorySection({ categories }: { categories: Category[] }) {
           {categories.slice(0, 8).map((category) => (
             <Link
               key={category.id}
-              href={`/products?category=${encodeURIComponent(category.name)}`}
+              href={categoryHref(category)}
               className="group flex min-h-32 min-w-[220px] items-center justify-between gap-4 rounded-lg border border-stone-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-stone-950 hover:bg-stone-50 sm:min-h-36 sm:min-w-[310px] sm:gap-5 sm:p-6"
             >
               <div className="min-w-0">

@@ -21,6 +21,7 @@ export type Product = {
   slug?: string;
   description?: string | null;
   category?: Category | null;
+  categoryId?: string | null;
   categoryName?: string | null;
   price?: number | null;
   compareAtPrice?: number | null;

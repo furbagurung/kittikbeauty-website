@@ -1,9 +1,8 @@
 import Link from "next/link";
 
 import { ProductImage } from "@/components/products/product-image";
+import { categoryHref } from "@/lib/category-utils";
 import type { Product } from "@/types/product";
-
-const categoryHref = (category: string) => `/products?category=${encodeURIComponent(category)}`;
 
 const promoCards = [
   {
@@ -18,7 +17,7 @@ const promoCards = [
     title: "Makeup Must-Haves",
     description: "Polished color, soft textures, and daily favorites.",
     cta: "EXPLORE MAKEUP >",
-    href: categoryHref("Makeup"),
+    href: categoryHref({ name: "Makeup" }),
     blockClass: "bg-[#c5c900] text-black",
     fallbackClass: "bg-[linear-gradient(135deg,#f3d8cf_0%,#d9a89c_100%)]",
   },
@@ -26,7 +25,7 @@ const promoCards = [
     title: "Skincare Glow Edit",
     description: "Gentle routines for radiant-looking skin.",
     cta: "VIEW SKINCARE >",
-    href: categoryHref("Skincare"),
+    href: categoryHref({ name: "Skincare" }),
     blockClass: "bg-[#d8804b] text-white",
     fallbackClass: "bg-[linear-gradient(135deg,#f4ddc6_0%,#d98a53_100%)]",
   },

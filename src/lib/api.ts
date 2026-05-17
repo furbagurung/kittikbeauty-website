@@ -1,4 +1,5 @@
 import type { Category, PaginatedProducts, Product, ProductVariant } from "@/types/product";
+import { productMatchesCategory, slugifyCategory } from "@/lib/category-utils";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://kittikbeauty.com/api";
 
@@ -7,7 +8,7 @@ type UnknownRecord = Record<string, unknown>;
 const fallbackCategories: Category[] = [
   { id: "skincare", name: "Skincare", description: "Daily glow essentials" },
   { id: "makeup", name: "Makeup", description: "Soft color and complexion" },
-  { id: "hair-care", name: "Hair Care", description: "Nourishing care rituals" },
+  { id: "haircare", name: "Haircare", description: "Nourishing care rituals" },
   { id: "fragrance", name: "Fragrance", description: "Elegant finishing touches" },
 ];
 
@@ -154,6 +155,7 @@ export function normalizeProduct(value: unknown): Product | null {
     slug: firstString(value.slug),
     description: cleanText(firstString(value.description, value.shortDescription)),
     category,
+    categoryId: firstString(value.categoryId, value.category_id, value.categoryID, category?.id) ?? null,
     categoryName: category?.name ?? firstString(value.categoryName, value.category) ?? null,
     price: firstNumber(value.price, value.salePrice, value.finalPrice, value.mrp),
     compareAtPrice: firstNumber(value.compareAtPrice, value.regularPrice, value.mrp),
@@ -196,6 +198,24 @@ export async function getProducts(page = 1, limit = 12): Promise<PaginatedProduc
   }
 }
 
+export async function getProductsByCategory(category: Category, limit = 50): Promise<Product[]> {
+  try {
+    const payload = await fetchJson(`/products?page=1&limit=${limit}&category=${encodeURIComponent(category.name)}`);
+    const rawProducts = extractArray(payload, ["products", "data", "items", "results"]);
+    const products = rawProducts.map(normalizeProduct).filter((product): product is Product => Boolean(product));
+    const matchingProducts = products.filter((product) => productMatchesCategory(product, category));
+
+    if (!products.length || matchingProducts.length) {
+      return matchingProducts;
+    }
+  } catch {
+    // Fall back to a broad product fetch below.
+  }
+
+  const { products } = await getProducts(1, Math.max(limit, 100));
+  return products.filter((product) => productMatchesCategory(product, category));
+}
+
 export async function getCategories(): Promise<Category[]> {
   try {
     const payload = await fetchJson("/categories");
@@ -205,7 +225,26 @@ export async function getCategories(): Promise<Category[]> {
 
     return categories.length ? categories : fallbackCategories;
   } catch {
-    return fallbackCategories;
+    const { products } = await getProducts(1, 100);
+    const categoriesByKey = new Map<string, Category>();
+
+    for (const product of products) {
+      const name = product.category?.name ?? product.categoryName;
+      if (!name) continue;
+
+      const slug = product.category?.slug ? slugifyCategory(product.category.slug) : slugifyCategory(name);
+      if (!slug || categoriesByKey.has(slug)) continue;
+
+      categoriesByKey.set(slug, {
+        id: product.categoryId || product.category?.id || slug,
+        name,
+        slug,
+        image: product.category?.image || product.image || null,
+        description: product.category?.description ?? null,
+      });
+    }
+
+    return categoriesByKey.size ? Array.from(categoriesByKey.values()) : fallbackCategories;
   }
 }
 

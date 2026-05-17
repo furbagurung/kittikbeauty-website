@@ -3,25 +3,52 @@ import { MessageCircle } from "lucide-react";
 
 import { HeaderSearch } from "@/components/layout/header-search";
 import { Button } from "@/components/ui/button";
-import { getProducts } from "@/lib/api";
+import { getCategories, getProducts } from "@/lib/api";
+import { categoryHref, slugifyCategory } from "@/lib/category-utils";
 import { createWhatsappLink } from "@/lib/whatsapp";
 
-const categoryLinks = [
-  { label: "New", href: "/products?sort=latest" },
-  { label: "Makeup", href: "/products?category=Makeup" },
-  { label: "Skincare", href: "/products?category=Skincare" },
-  { label: "Fragrance", href: "/products?category=Fragrance" },
-  { label: "Hair", href: "/products?category=Hair" },
-  { label: "Tools & Brushes", href: "/products?category=Tools%20%26%20Brushes" },
-  { label: "Bath & Body", href: "/products?category=Bath%20%26%20Body" },
-  { label: "Mini Size", href: "/products?category=Mini%20Size" },
+type HeaderCategoryLink = {
+  label: string;
+  href?: string;
+  categoryAliases?: string[];
+};
+
+const categoryLinks: HeaderCategoryLink[] = [
+  { label: "New", href: "/products" },
+  { label: "Makeup", categoryAliases: ["makeup"] },
+  { label: "Skincare", categoryAliases: ["skincare", "skin-care"] },
+  { label: "Fragrance", categoryAliases: ["fragrance", "perfume"] },
+  { label: "Hair", categoryAliases: ["haircare", "hair-care", "hair"] },
+  { label: "Tools & Brushes", categoryAliases: ["tools-and-brushes", "tools-brushes"] },
+  { label: "Bath & Body", categoryAliases: ["bath-and-body", "bath-body"] },
+  { label: "Mini Size", categoryAliases: ["mini-size"] },
   { label: "Brands", href: "/products" },
-  { label: "Gifts & Value Sets", href: "/products?category=Gifts%20%26%20Value%20Sets" },
-  { label: "Sale & Offers", href: "/products" },
+  { label: "Gifts & Value Sets", categoryAliases: ["gifts-and-value-sets", "gifts-value-sets"] },
+  { label: "Sale & Offers", categoryAliases: ["sale-and-offers", "sale-offers", "sale"] },
 ];
 
 export async function SiteHeader() {
-  const { products } = await getProducts(1, 50);
+  const [{ products }, categories] = await Promise.all([getProducts(1, 50), getCategories()]);
+
+  const navLinks: Array<{ label: string; href: string }> = categoryLinks.map((item) => {
+    if (item.href) {
+      return {
+        label: item.label,
+        href: item.href,
+      };
+    }
+
+    const aliases = item.categoryAliases ?? [item.label];
+    const matchingCategory = categories.find((category) => {
+      const candidates = [category.slug, category.name].filter(Boolean).map((value) => slugifyCategory(String(value)));
+      return aliases.some((alias) => candidates.includes(slugifyCategory(alias)));
+    });
+
+    return {
+      label: item.label,
+      href: matchingCategory ? categoryHref(matchingCategory) : `/products/categories/${slugifyCategory(aliases[0])}`,
+    };
+  });
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white">
@@ -67,7 +94,7 @@ export async function SiteHeader() {
       <nav className="bg-black text-white" aria-label="Product categories">
         <div className="no-scrollbar mx-auto w-full max-w-[1600px] touch-pan-x overflow-x-auto overscroll-x-contain scroll-smooth px-4 sm:px-6 lg:px-8">
           <div className="flex h-10 min-w-max items-center justify-start gap-6 whitespace-nowrap text-xs font-bold sm:h-11 sm:gap-8 sm:text-sm lg:justify-center xl:gap-10">
-            {categoryLinks.map((item) => (
+            {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}

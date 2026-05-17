@@ -6,6 +6,7 @@ import { ChevronLeft, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ProductImage } from "@/components/products/product-image";
+import { categoryHref } from "@/lib/category-utils";
 import { formatPrice, productHref } from "@/lib/product-utils";
 import type { Product } from "@/types/product";
 
@@ -18,9 +19,9 @@ type SearchSurface = "desktop" | "mobile";
 const popularSearches = ["Sunscreen", "Lip tint", "Mascara", "Serum", "Eyeliner", "Blush", "Moisturizer", "Foundation"];
 
 const categoryShortcuts = [
-  { label: "Makeup", href: "/products?category=Makeup" },
-  { label: "Skincare", href: "/products?category=Skincare" },
-  { label: "Haircare", href: "/products?category=Haircare" },
+  { label: "Makeup", href: categoryHref({ name: "Makeup" }) },
+  { label: "Skincare", href: categoryHref({ name: "Skincare" }) },
+  { label: "Haircare", href: categoryHref({ name: "Haircare" }) },
   { label: "New Arrivals", href: "/products?sort=latest" },
 ];
 
