@@ -28,11 +28,11 @@ export function BrandSection({
       <div className="mx-auto w-full max-w-[1304px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.16em] text-stone-500">BRANDS</p>
-            <h2 className="text-[30px] font-bold leading-tight tracking-tight text-stone-950 sm:text-5xl">
+            {/* <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.16em] text-stone-500 border border-stone-300  rounded-full w-fit p-2 pl-4">BRANDS</p> */}
+            <h2 className="text-[22px] font-bold leading-tight tracking-tight text-stone-950 sm:text-[36px]">
               Shop by brands
             </h2>
-            <p className="mt-2 text-base leading-7 text-stone-600">Explore beauty favorites by brand.</p>
+            {/* <p className="mt-2 text-base leading-7 text-stone-600">Explore beauty favorites by brand.</p> */}
           </div>
           <Button asChild variant="outline" className="h-11 rounded-md border-stone-950 bg-white px-6 font-bold sm:shrink-0">
             <Link href="/products/brands">View all brands</Link>
