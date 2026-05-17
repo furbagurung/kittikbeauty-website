@@ -65,3 +65,21 @@ export type PaginatedProducts = {
   limit: number;
   totalPages: number;
 };
+
+export type ReelProductTag = {
+  id?: string;
+  productId?: string | null;
+  ctaLabel?: string | null;
+  product?: Product | null;
+};
+
+export type Reel = {
+  id: string;
+  title: string;
+  caption?: string | null;
+  videoUrl: string;
+  thumbnailUrl?: string | null;
+  viewCount?: number | null;
+  likeCount?: number | null;
+  productTags: ReelProductTag[];
+};

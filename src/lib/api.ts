@@ -1,4 +1,13 @@
-import type { Brand, Category, PaginatedProducts, Product, ProductVariant, SubCategory } from "@/types/product";
+import type {
+  Brand,
+  Category,
+  PaginatedProducts,
+  Product,
+  ProductVariant,
+  Reel,
+  ReelProductTag,
+  SubCategory,
+} from "@/types/product";
 import { productMatchesBrand, productMatchesCategory, productMatchesSubCategory, slugifyCategory } from "@/lib/category-utils";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://kittikbeauty.com/api";
@@ -161,6 +170,46 @@ function normalizeVariant(value: unknown): ProductVariant | null {
     color: firstString(value.color, value.hex),
     price: firstNumber(value.price, value.salePrice),
     stock: firstNumber(value.stock, value.quantity, value.inventory),
+  };
+}
+
+function normalizeReelProductTag(value: unknown): ReelProductTag | null {
+  if (!isRecord(value)) return null;
+
+  return {
+    id: firstString(value.id, value._id),
+    productId: firstString(value.productId, value.product_id) ?? null,
+    ctaLabel: firstString(value.ctaLabel, value.label) ?? null,
+    product: normalizeProduct(value.product),
+  };
+}
+
+function normalizeReel(value: unknown): Reel | null {
+  if (!isRecord(value)) return null;
+
+  const id = firstString(value.id, value._id);
+  const title = firstString(value.title, value.name);
+  const videoUrl = absolutizeImage(firstString(value.videoUrl, value.video, value.url));
+
+  if (!id || !title || !videoUrl) return null;
+
+  const productTags = extractArray(value.productTags ?? value.product_tags ?? value.reelproducttag, [
+    "productTags",
+    "data",
+    "items",
+  ])
+    .map(normalizeReelProductTag)
+    .filter((tag): tag is ReelProductTag => Boolean(tag));
+
+  return {
+    id,
+    title,
+    caption: cleanText(firstString(value.caption, value.description)),
+    videoUrl,
+    thumbnailUrl: absolutizeImage(firstString(value.thumbnailUrl, value.thumbnail, value.poster)),
+    viewCount: firstNumber(value.viewCount, value.views),
+    likeCount: firstNumber(value.likeCount, value.likes),
+    productTags,
   };
 }
 
@@ -336,6 +385,17 @@ export async function getBrands(): Promise<Brand[]> {
     return extractArray(payload, ["brands", "data", "items", "results"])
       .map(normalizeBrand)
       .filter((brand): brand is Brand => Boolean(brand));
+  } catch {
+    return [];
+  }
+}
+
+export async function getReels(limit = 8): Promise<Reel[]> {
+  try {
+    const payload = await fetchJson(`/reels?page=1&limit=${limit}`);
+    return extractArray(payload, ["reels", "data", "items", "results"])
+      .map(normalizeReel)
+      .filter((reel): reel is Reel => Boolean(reel));
   } catch {
     return [];
   }
