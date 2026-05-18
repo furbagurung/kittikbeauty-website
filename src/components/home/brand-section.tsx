@@ -1,7 +1,7 @@
 import Link from "next/link";
 
+import { HomeCarousel } from "@/components/home/home-carousel";
 import { ProductImage } from "@/components/products/product-image";
-import { Button } from "@/components/ui/button";
 import { brandHref, buildBrandSummaries } from "@/lib/category-utils";
 import type { Brand, Product } from "@/types/product";
 
@@ -24,59 +24,44 @@ export function BrandSection({
   if (!brandSummaries.length) return null;
 
   return (
-    <section id="brands" className="border-b border-stone-200 bg-white py-9 sm:py-12">
-      <div className="mx-auto w-full max-w-[1304px] px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            {/* <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.16em] text-stone-500 border border-stone-300  rounded-full w-fit p-2 pl-4">BRANDS</p> */}
-            <h2 className="text-[22px] font-bold leading-tight tracking-tight text-stone-950 sm:text-[36px]">
-              Shop by brands
-            </h2>
-            {/* <p className="mt-2 text-base leading-7 text-stone-600">Explore beauty favorites by brand.</p> */}
-          </div>
-          <Button asChild variant="outline" className="h-11 rounded-md border-stone-950 bg-white px-6 font-bold sm:shrink-0">
-            <Link href="/products/brands">View all brands</Link>
-          </Button>
+    <section id="brands" className="bg-white">
+      <div className="mx-auto w-full max-w-[1304px] border-b border-stone-200 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-[24px] font-extrabold leading-tight tracking-tight text-stone-950 uppercase">
+            Brands we love
+          </h2>
         </div>
 
-        <div className="no-scrollbar -mx-3 mt-4 flex snap-x gap-5 overflow-x-auto overscroll-x-contain scroll-smooth px-3 py-5 sm:-mx-4 sm:mt-6 sm:gap-7 sm:px-4 sm:py-6">
-          {brandSummaries.map((brand, index) => {
-            const useLogoFit = Boolean(brand.logo);
-
-            return (
-              <Link
-                key={`${brand.id}-${brand.slugValue}`}
-                href={brandHref(brand)}
-                className="group flex w-[92px] shrink-0 snap-start flex-col items-center px-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 sm:w-32"
-              >
-                <div className="size-[84px] rounded-full transition-transform duration-300 ease-out group-hover:-translate-y-0.5 sm:size-32">
-                  <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-stone-100">
-                    {brand.image ? (
-                      <ProductImage
-                        src={brand.image}
-                        alt={`${brand.name} beauty brand`}
-                        priority={index < 6}
-                        sizes="(min-width: 640px) 120px, 76px"
-                        className={
-                          useLogoFit
-                            ? "object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-105"
-                            : "transition-transform duration-500 ease-out group-hover:scale-105"
-                        }
-                      />
-                    ) : (
-                      <div className={`flex h-full w-full items-center justify-center ${fallbackVisuals[index % fallbackVisuals.length]}`}>
-                        <span className="text-2xl font-bold text-stone-950 sm:text-4xl">{brand.name.slice(0, 1)}</span>
-                      </div>
-                    )}
-                  </div>
+        <HomeCarousel
+          className="mt-4 sm:mt-5"
+          controlsLabel="Brand carousel controls"
+          trackClassName="gap-2 sm:gap-3 lg:gap-4"
+        >
+          {brandSummaries.map((brand, index) => (
+            <Link
+              key={`${brand.id}-${brand.slugValue}`}
+              href={brandHref(brand)}
+              className="group relative flex aspect-square w-[104px] shrink-0 snap-start items-center justify-center overflow-hidden bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 min-[420px]:w-[118px] sm:w-[140px] lg:w-[148px]"
+              aria-label={`Shop ${brand.name}`}
+            >
+              {brand.image ? (
+                <ProductImage
+                  src={brand.image}
+                  alt={`${brand.name} beauty brand`}
+                  priority={index < 6}
+                  sizes="(min-width: 1024px) 148px, (min-width: 640px) 140px, 110px"
+                  className="object-contain p-5 mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-105 sm:p-6"
+                />
+              ) : (
+                <div className={`flex h-full w-full items-center justify-center ${fallbackVisuals[index % fallbackVisuals.length]}`}>
+                  <span className="text-3xl font-extrabold text-stone-950 sm:text-4xl">
+                    {brand.name.slice(0, 1)}
+                  </span>
                 </div>
-                <span className="mt-2 line-clamp-2 min-h-[36px] text-[13px] font-bold leading-[18px] tracking-tight text-stone-950 sm:mt-3 sm:text-[15px] sm:leading-5">
-                  {brand.name}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+              )}
+            </Link>
+          ))}
+        </HomeCarousel>
       </div>
     </section>
   );

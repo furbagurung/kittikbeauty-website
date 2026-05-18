@@ -2,12 +2,10 @@ import { SectionHeading } from "@/components/shared/section-heading";
 
 export function BrandStory() {
   return (
-    <section id="story" className="border-b border-stone-200 bg-white py-12 sm:py-14">
-      <div className="mx-auto grid w-full max-w-[1304px] items-center gap-8 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+    <section id="story" className="bg-white">
+      <div className="mx-auto grid w-full max-w-[1304px] items-center gap-8 border-b border-stone-200 px-4 py-7 sm:px-6 sm:py-9 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
         <SectionHeading
-          eyebrow="Our story"
           title="A practical beauty catalog with a premium eye."
-          description="Kittik Beauty curates skincare and cosmetics for customers who want clear product discovery, reliable support, and a polished everyday routine."
         />
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="rounded-lg border border-stone-200 bg-stone-50 p-5">

@@ -9,8 +9,8 @@ const badges = [
 
 export function TrustBadges() {
   return (
-    <section className="bg-white py-10 sm:py-12">
-      <div className="mx-auto grid w-full max-w-[1304px] gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+    <section className="bg-white">
+      <div className="mx-auto grid w-full max-w-[1304px] gap-4 border-b border-stone-200 px-4 py-7 sm:grid-cols-2 sm:px-6 sm:py-8 lg:grid-cols-4 lg:px-8">
         {badges.map((badge) => {
           const Icon = badge.icon;
           return (

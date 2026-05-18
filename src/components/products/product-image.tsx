@@ -30,9 +30,10 @@ export function ProductImage({ src, alt, priority, className, sizes }: ProductIm
       src={src}
       alt={alt}
       fill
+      draggable={false}
       priority={priority}
       sizes={sizes}
-      className={cn("object-cover", className)}
+      className={cn("select-none object-cover", className)}
       onError={() => setFailed(true)}
     />
   );

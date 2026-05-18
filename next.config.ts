@@ -5,15 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "kittikbeauty.com",
-      },
-      {
-        protocol: "https",
-        hostname: "www.kittikbeauty.com",
-      },
-      {
-        protocol: "https",
-        hostname: "kittik.furkedesigns.com",
+        hostname: "**",
       },
     ],
   },

@@ -6,11 +6,10 @@ import { BrandSection } from "@/components/home/brand-section";
 import { BrandStory } from "@/components/home/brand-story";
 import { CategorySection } from "@/components/home/category-section";
 import { Hero } from "@/components/home/hero";
+import { ProductCarouselSection } from "@/components/home/product-carousel-section";
 import { ReelSection } from "@/components/home/reel-section";
 import { TrustBadges } from "@/components/home/trust-badges";
 import { PageShell } from "@/components/shared/page-shell";
-import { ProductCard } from "@/components/products/product-card";
-import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
 import {
   getBrands,
@@ -52,61 +51,39 @@ export default async function Home() {
     ],
   );
   const arrivals = catalog.products.slice(0, 12);
+  const featuredProducts = catalog.products.slice(12, 24);
 
   return (
     <PageShell>
       <Hero products={arrivals} />
       <ReelSection reels={reels} />
-       <BrandSection brands={brands} products={catalog.products} />
-      <section
+      <BrandSection brands={brands} products={catalog.products} />
+      <ProductCarouselSection
         id="new-arrivals"
-        className="border-b border-stone-200 bg-white py-3 sm:py-6"
-      >
-        <div className="mx-auto w-full max-w-[1304px] px-4 sm:px-6 lg:px-8">
-          
-          <SectionHeading
-            eyebrow="New arrivals"
-            title="Fresh beauty arrivals"
-            action={
-              <Button
-                asChild
-                variant="outline"
-                className="h-11 rounded-md border-stone-950 bg-white px-6 font-bold"
-              >
-                <Link href="/products">
-                  View all
-                  <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-            }
-          />
-          <div className="no-scrollbar -mx-3 mt-6 flex snap-x gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 pt-1 sm:-mx-4 sm:mt-9 sm:gap-6 sm:px-4">
-            {arrivals.map((product, index) => (
-              <div
-                key={product.id}
-                className="w-[172px] shrink-0 snap-start min-[420px]:w-[196px] sm:w-[260px] lg:w-[284px]"
-              >
-                <ProductCard product={product} priority={index < 4} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        title="Fresh beauty arrivals"
+        products={arrivals}
+        controlsLabel="New arrivals carousel controls"
+      />
+      <ProductCarouselSection
+        id="featured-products"
+        title="Featured products"
+        products={featuredProducts}
+        controlsLabel="Featured products carousel controls"
+      />
       <CategorySection
         categories={categories}
         products={catalog.products}
         subCategories={subCategories}
       />
-     
 
-      <section className="border-b border-stone-200 bg-white py-10 sm:py-14">
-        <div className="mx-auto w-full max-w-[1304px] px-4 sm:px-6 lg:px-8">
+      <section className="bg-white">
+        <div className="mx-auto w-full max-w-[1304px] border-b border-stone-200 px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
           <div className="grid items-center gap-6 rounded-lg border border-stone-200 bg-stone-950 p-5 text-white sm:gap-8 sm:p-9 lg:grid-cols-[1fr_auto] lg:p-12">
             <div>
               <p className="text-xs font-bold tracking-[0.16em] text-stone-300 uppercase">
                 Featured routine
               </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
+              <h2 className="mt-3 text-[24px] font-bold leading-tight tracking-tight uppercase">
                 Glow essentials for every routine
               </h2>
               <p className="mt-3 max-w-2xl text-base leading-7 text-stone-300">

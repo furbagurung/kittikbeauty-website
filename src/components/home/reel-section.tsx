@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Play, X } from "lucide-react";
 
+import { HomeCarousel } from "@/components/home/home-carousel";
 import { ProductImage } from "@/components/products/product-image";
 import type { Reel } from "@/types/product";
 
@@ -33,19 +34,20 @@ export function ReelSection({ reels }: { reels: Reel[] }) {
 
   return (
     <>
-      <section id="reels" className=" bg-white pb-3 sm:pb-6">
-        <div className="mx-auto w-full max-w-[1304px] px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            {/* <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.16em] text-stone-500 border border-stone-300  rounded-full w-fit p-2 pl-4">REELS</p>
-            <h2 className="text-[22px] font-bold leading-tight tracking-tight text-stone-950 sm:text-[36px]">
+      <section id="reels" className="bg-white">
+        <div className="mx-auto w-full max-w-[1304px] border-b border-stone-200 px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-[24px] font-bold leading-tight tracking-tight text-stone-950 uppercase">
               Beauty reels
-            </h2> */}
-            {/* <p className="mt-2 text-base leading-7 text-stone-600">
-              Watch quick product picks, routines, and beauty inspiration from Kittik Beauty.
-            </p> */}
+            </h2>
           </div>
 
-          <div className="no-scrollbar -mx-3 mt-5 flex snap-x gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 pt-1 sm:-mx-4 sm:mt-7 sm:gap-5 sm:px-4">
+          <HomeCarousel
+            className="mt-5 sm:mt-6"
+            trackClassName="sm:gap-5"
+            controlsLabel="Beauty reels carousel controls"
+            showIndicators
+          >
             {reels.map((reel, index) => (
               <button
                 key={reel.id}
@@ -79,7 +81,7 @@ export function ReelSection({ reels }: { reels: Reel[] }) {
                 </div>
               </button>
             ))}
-          </div>
+          </HomeCarousel>
         </div>
       </section>
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 
 import { HeaderSearch } from "@/components/layout/header-search";
+import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { Button } from "@/components/ui/button";
 import { getCategories, getProducts } from "@/lib/api";
 import { categoryHref, slugifyCategory } from "@/lib/category-utils";
@@ -29,6 +30,7 @@ const categoryLinks: HeaderCategoryLink[] = [
 
 export async function SiteHeader() {
   const [{ products }, categories] = await Promise.all([getProducts(1, 50), getCategories()]);
+  const whatsappHref = createWhatsappLink("Hi, I want to ask about Kittik Beauty products.");
 
   const navLinks: Array<{ label: string; href: string }> = categoryLinks.map((item) => {
     if (item.href) {
@@ -58,30 +60,23 @@ export async function SiteHeader() {
       <div className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-2 px-3 py-2 sm:h-[68px] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-0 lg:px-8">
           <div className="flex min-h-10 items-center justify-between gap-3 sm:min-h-0">
-            <Link
-              href="/"
-              className="shrink-0 text-base font-bold tracking-[0.12em] text-stone-950 uppercase sm:text-xl sm:tracking-[0.16em]"
-              aria-label="Kittik Beauty home"
-            >
-              Kittik Beauty
-            </Link>
-            <Button asChild className="h-9 rounded-full bg-stone-950 px-3 text-sm font-bold text-white hover:bg-black sm:hidden">
+            <div className="flex items-center gap-2">
+              <MobileNavigation navLinks={navLinks} whatsappHref={whatsappHref} />
               <Link
-                href={createWhatsappLink("Hi, I want to ask about Kittik Beauty products.")}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/"
+                className="shrink-0 text-base font-bold tracking-[0.12em] text-stone-950 uppercase sm:text-xl sm:tracking-[0.16em]"
+                aria-label="Kittik Beauty home"
               >
-                <MessageCircle className="size-4" />
-                WhatsApp
+                Kittik Beauty
               </Link>
-            </Button>
+            </div>
           </div>
 
           <HeaderSearch products={products} />
 
           <Button asChild className="hidden h-11 rounded-full bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-black sm:inline-flex">
             <Link
-              href={createWhatsappLink("Hi, I want to ask about Kittik Beauty products.")}
+              href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -91,7 +86,7 @@ export async function SiteHeader() {
           </Button>
         </div>
       </div>
-      <nav className="bg-black text-white" aria-label="Product categories">
+      <nav className="hidden bg-black text-white sm:block" aria-label="Product categories">
         <div className="no-scrollbar mx-auto w-full max-w-[1600px] touch-pan-x overflow-x-auto overscroll-x-contain scroll-smooth px-4 sm:px-6 lg:px-8">
           <div className="flex h-10 min-w-max items-center justify-start gap-6 whitespace-nowrap text-xs font-bold sm:h-11 sm:gap-8 sm:text-sm lg:justify-center xl:gap-10">
             {navLinks.map((item) => (
