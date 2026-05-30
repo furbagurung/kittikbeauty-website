@@ -25,6 +25,17 @@ export type Brand = {
   description?: string | null;
 };
 
+export type Banner = {
+  id: string;
+  image: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  cta?: string | null;
+  link?: string | null;
+  isActive?: boolean | null;
+  order?: number | null;
+};
+
 export type ProductVariant = {
   id?: string;
   name?: string;

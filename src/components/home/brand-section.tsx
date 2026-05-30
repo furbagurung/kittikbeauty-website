@@ -6,10 +6,10 @@ import { brandHref, buildBrandSummaries } from "@/lib/category-utils";
 import type { Brand, Product } from "@/types/product";
 
 const fallbackVisuals = [
-  "bg-[radial-gradient(circle_at_30%_25%,#fecdd3,transparent_42%),linear-gradient(135deg,#ffffff,#e7e5e4)]",
-  "bg-[radial-gradient(circle_at_72%_28%,#ddd6fe,transparent_42%),linear-gradient(135deg,#ffffff,#e5e7eb)]",
-  "bg-[radial-gradient(circle_at_28%_72%,#bae6fd,transparent_42%),linear-gradient(135deg,#fafafa,#d6d3d1)]",
-  "bg-[radial-gradient(circle_at_70%_68%,#fde68a,transparent_42%),linear-gradient(135deg,#ffffff,#e7e5e4)]",
+  "bg-[linear-gradient(135deg,#ffffff,#e5e5e5)]",
+  "bg-[linear-gradient(135deg,#fafafa,#d4d4d4)]",
+  "bg-[linear-gradient(135deg,#f5f5f5,#e4e4e7)]",
+  "bg-[linear-gradient(135deg,#ffffff,#d6d3d1)]",
 ];
 
 export function BrandSection({
@@ -25,9 +25,9 @@ export function BrandSection({
 
   return (
     <section id="brands" className="bg-white">
-      <div className="mx-auto w-full max-w-[1304px] border-b border-stone-200 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-[24px] font-extrabold leading-tight tracking-tight text-stone-950 uppercase">
+      <div className="mx-auto w-full max-w-[1304px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="text-left">
+          <h2 className="text-[22px] font-black leading-tight tracking-tight text-stone-950 sm:text-[28px]">
             Brands we love
           </h2>
         </div>
@@ -41,7 +41,7 @@ export function BrandSection({
             <Link
               key={`${brand.id}-${brand.slugValue}`}
               href={brandHref(brand)}
-              className="group relative flex aspect-square w-[104px] shrink-0 snap-start items-center justify-center overflow-hidden bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 min-[420px]:w-[118px] sm:w-[140px] lg:w-[148px]"
+              className="group relative flex aspect-square w-[104px] shrink-0 snap-start items-center justify-center overflow-hidden rounded-[24px] border border-neutral-200 bg-white shadow-[0_10px_28px_rgba(24,24,27,0.06)] transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 min-[420px]:w-[118px] sm:w-[140px] lg:w-[148px]"
               aria-label={`Shop ${brand.name}`}
             >
               {brand.image ? (
@@ -54,8 +54,8 @@ export function BrandSection({
                 />
               ) : (
                 <div className={`flex h-full w-full items-center justify-center ${fallbackVisuals[index % fallbackVisuals.length]}`}>
-                  <span className="text-3xl font-extrabold text-stone-950 sm:text-4xl">
-                    {brand.name.slice(0, 1)}
+                  <span className="line-clamp-2 px-3 text-center text-sm font-black leading-tight text-stone-950 sm:text-base">
+                    {brand.name}
                   </span>
                 </div>
               )}

@@ -14,6 +14,9 @@ export function SiteFooter() {
           <Link className="inline-flex min-h-10 items-center transition-colors hover:text-stone-950 sm:min-h-0" href="/products">
             Products
           </Link>
+          <Link className="inline-flex min-h-10 items-center transition-colors hover:text-stone-950 sm:min-h-0" href="/makeup">
+            Makeup Services
+          </Link>
           <Link className="inline-flex min-h-10 items-center transition-colors hover:text-stone-950 sm:min-h-0" href="/#categories">
             Categories
           </Link>

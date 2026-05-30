@@ -3,16 +3,21 @@
 import { useEffect, useState } from "react";
 import { Play, X } from "lucide-react";
 
-import { HomeCarousel } from "@/components/home/home-carousel";
 import { ProductImage } from "@/components/products/product-image";
 import type { Reel } from "@/types/product";
 
 const fallbackVisuals = [
-  "bg-[radial-gradient(circle_at_30%_22%,#fecdd3,transparent_38%),linear-gradient(145deg,#ffffff,#d6d3d1)]",
-  "bg-[radial-gradient(circle_at_72%_26%,#ddd6fe,transparent_38%),linear-gradient(145deg,#ffffff,#e5e7eb)]",
-  "bg-[radial-gradient(circle_at_26%_76%,#bae6fd,transparent_38%),linear-gradient(145deg,#fafafa,#d6d3d1)]",
-  "bg-[radial-gradient(circle_at_72%_72%,#fde68a,transparent_38%),linear-gradient(145deg,#ffffff,#e7e5e4)]",
+  "bg-[linear-gradient(145deg,#ffffff,#e5e5e5)]",
+  "bg-[linear-gradient(145deg,#fafafa,#d4d4d4)]",
+  "bg-[linear-gradient(145deg,#f5f5f5,#e4e4e7)]",
+  "bg-[linear-gradient(145deg,#ffffff,#d6d3d1)]",
 ];
+
+const highlightLabels = ["New In", "Tutorials", "Reviews", "Lip Care", "Skin Prep", "Tools"];
+
+function highlightLabel(index: number) {
+  return highlightLabels[index % highlightLabels.length];
+}
 
 export function ReelSection({ reels }: { reels: Reel[] }) {
   const [activeReel, setActiveReel] = useState<Reel | null>(null);
@@ -20,14 +25,20 @@ export function ReelSection({ reels }: { reels: Reel[] }) {
   useEffect(() => {
     if (!activeReel) return;
 
+    const originalOverflow = document.body.style.overflow;
+
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setActiveReel(null);
       }
     }
 
+    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [activeReel]);
 
   if (!reels.length) return null;
@@ -35,86 +46,103 @@ export function ReelSection({ reels }: { reels: Reel[] }) {
   return (
     <>
       <section id="reels" className="bg-white">
-        <div className="mx-auto w-full max-w-[1304px] border-b border-stone-200 px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-[24px] font-bold leading-tight tracking-tight text-stone-950 uppercase">
-              Beauty reels
+        <div className="mx-auto w-full max-w-[1304px] px-4 py-3.5 sm:px-6 sm:py-6 lg:px-8">
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="text-[22px] font-black leading-tight tracking-tight text-stone-950 sm:text-[28px]">
+              Beauty highlights
             </h2>
           </div>
 
-          <HomeCarousel
-            className="mt-5 sm:mt-6"
-            trackClassName="sm:gap-5"
-            controlsLabel="Beauty reels carousel controls"
-            showIndicators
-          >
+          <div className="no-scrollbar mt-2.5 flex snap-x gap-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-1 sm:gap-5">
             {reels.map((reel, index) => (
               <button
                 key={reel.id}
                 type="button"
                 onClick={() => setActiveReel(reel)}
-                className="group w-[170px] shrink-0 snap-start text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 sm:w-[220px]"
+                className="group w-[78px] shrink-0 snap-start text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 sm:w-[88px]"
                 aria-label={`Play ${reel.title}`}
               >
-                <div className="relative aspect-[9/14] overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-stone-400">
+                <div className="relative aspect-square overflow-hidden rounded-full border border-neutral-300 bg-neutral-100 p-1 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:border-stone-950">
+                  <div className="relative h-full w-full overflow-hidden rounded-full bg-neutral-100">
                   {reel.thumbnailUrl ? (
                     <ProductImage
                       src={reel.thumbnailUrl}
                       alt={reel.title}
                       priority={index < 3}
-                      sizes="(min-width: 640px) 220px, 170px"
-                      className="transition-transform duration-500 ease-out group-hover:scale-105"
+                      sizes="(min-width: 640px) 88px, 78px"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     />
                   ) : (
                     <div className={`h-full w-full ${fallbackVisuals[index % fallbackVisuals.length]}`} />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <span className="absolute left-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-white text-stone-950 shadow-sm">
-                    <Play className="ml-0.5 size-4 fill-current" aria-hidden="true" />
+                  <span className="absolute inset-0 flex items-center justify-center bg-black/15 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="inline-flex size-8 items-center justify-center rounded-full bg-black/70">
+                      <Play className="ml-0.5 size-3.5 fill-current" aria-hidden="true" />
+                    </span>
                   </span>
-                  <div className="absolute inset-x-0 bottom-0 p-3 text-white sm:p-4">
-                    <h3 className="line-clamp-2 text-sm font-bold leading-5 sm:text-base sm:leading-6">{reel.title}</h3>
-                    {reel.caption ? (
-                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-white/80">{reel.caption}</p>
-                    ) : null}
                   </div>
                 </div>
+                <span className="mt-1.5 block truncate text-[11px] font-bold leading-tight text-stone-950 sm:text-xs">
+                  {highlightLabel(index)}
+                </span>
               </button>
             ))}
-          </HomeCarousel>
+          </div>
         </div>
       </section>
 
       {activeReel ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-6"
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-black px-4 py-6"
           role="dialog"
           aria-modal="true"
           aria-label={activeReel.title}
           onClick={() => setActiveReel(null)}
         >
+          <button
+            type="button"
+            className="absolute inset-0"
+            onClick={() => setActiveReel(null)}
+            aria-label="Close reel"
+          />
           <div
-            className="relative w-full max-w-[420px]"
+            className="relative z-[121] w-full max-w-[420px]"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setActiveReel(null)}
-              className="absolute -right-2 -top-12 inline-flex size-10 items-center justify-center rounded-full bg-white text-stone-950 shadow-sm transition hover:bg-stone-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:-right-12 sm:top-0"
+              className="absolute right-0 top-[-52px] inline-flex size-10 items-center justify-center rounded-full bg-white text-stone-950 shadow-sm transition hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               aria-label="Close reel"
             >
               <X className="size-5" aria-hidden="true" />
             </button>
             <div className="overflow-hidden rounded-2xl bg-black shadow-[0_30px_90px_rgba(0,0,0,0.5)]">
-              <video
-                key={activeReel.id}
-                src={activeReel.videoUrl}
-                poster={activeReel.thumbnailUrl ?? undefined}
-                controls
-                autoPlay
-                playsInline
-                className="max-h-[82vh] w-full bg-black"
-              />
+              {activeReel.videoUrl ? (
+                <video
+                  key={activeReel.id}
+                  src={activeReel.videoUrl}
+                  poster={activeReel.thumbnailUrl ?? undefined}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="max-h-[82dvh] w-full bg-black"
+                />
+              ) : (
+                <div className="relative aspect-[9/16] bg-neutral-900">
+                  <ProductImage
+                    src={activeReel.thumbnailUrl}
+                    alt={activeReel.title}
+                    sizes="420px"
+                    className="object-cover opacity-80"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="inline-flex size-14 items-center justify-center rounded-full bg-white text-stone-950">
+                      <Play className="ml-1 size-6 fill-current" aria-hidden="true" />
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="mt-3 text-white">
               <h3 className="text-lg font-bold leading-6">{activeReel.title}</h3>

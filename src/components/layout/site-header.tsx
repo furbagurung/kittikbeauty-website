@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ShoppingBag, UserRound } from "lucide-react";
 
 import { HeaderSearch } from "@/components/layout/header-search";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
@@ -16,6 +16,7 @@ type HeaderCategoryLink = {
 
 const categoryLinks: HeaderCategoryLink[] = [
   { label: "New", href: "/products" },
+  { label: "Makeup Services", href: "/makeup" },
   { label: "Makeup", categoryAliases: ["makeup"] },
   { label: "Skincare", categoryAliases: ["skincare", "skin-care"] },
   { label: "Fragrance", categoryAliases: ["fragrance", "perfume"] },
@@ -53,28 +54,69 @@ export async function SiteHeader() {
   });
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200 bg-white">
-      <div className="flex h-8 items-center justify-center bg-stone-950 px-4 text-center text-[12px] font-bold tracking-[0.03em] text-white sm:text-[13px]">
+    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-xl">
+      <div className="flex h-7 items-center justify-center bg-neutral-950 px-4 text-center text-[11px] font-bold tracking-[0.02em] text-white sm:h-8 sm:text-[13px]">
         Authentic beauty picks | WhatsApp support | Delivery available
       </div>
-      <div className="border-b border-stone-200 bg-white">
-        <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-2 px-3 py-2 sm:h-[68px] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-0 lg:px-8">
-          <div className="flex min-h-10 items-center justify-between gap-3 sm:min-h-0">
+      <div className="border-b border-neutral-200 bg-white">
+        <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-1.5 px-3 py-1.5 sm:h-[72px] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-0 lg:px-8">
+          <div className="flex min-h-9 items-center justify-between gap-3 sm:min-h-0">
             <div className="flex items-center gap-2">
-              <MobileNavigation navLinks={navLinks} whatsappHref={whatsappHref} />
+              <MobileNavigation navLinks={navLinks} />
               <Link
                 href="/"
-                className="shrink-0 text-base font-bold tracking-[0.12em] text-stone-950 uppercase sm:text-xl sm:tracking-[0.16em]"
+                className="shrink-0 rounded-full bg-stone-950 px-3 py-1.5 text-[12px] font-black tracking-[0.08em] text-white uppercase shadow-[0_10px_24px_rgba(28,25,23,0.12)] sm:bg-transparent sm:px-0 sm:py-0 sm:text-xl sm:tracking-[0.12em] sm:text-stone-950 sm:shadow-none"
                 aria-label="Kittik Beauty home"
               >
                 Kittik Beauty
+              </Link>
+            </div>
+            <div className="flex items-center gap-1.5 sm:hidden">
+              <Link
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex size-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-stone-950"
+                aria-label="Cart support"
+              >
+                <ShoppingBag className="size-4.5" aria-hidden="true" />
+              </Link>
+              <Link
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex size-9 items-center justify-center rounded-full bg-stone-950 text-white"
+                aria-label="Account support"
+              >
+                <UserRound className="size-4.5" aria-hidden="true" />
               </Link>
             </div>
           </div>
 
           <HeaderSearch products={products} />
 
-          <Button asChild className="hidden h-11 rounded-full bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-black sm:inline-flex">
+          <div className="hidden items-center gap-2 sm:flex">
+            <Link
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-neutral-200 bg-white text-stone-950 transition hover:bg-neutral-100"
+              aria-label="Cart support"
+            >
+              <ShoppingBag className="size-5" aria-hidden="true" />
+            </Link>
+            <Link
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-950 transition hover:bg-stone-50"
+              aria-label="Account support"
+            >
+              <UserRound className="size-5" aria-hidden="true" />
+            </Link>
+          </div>
+
+          <Button asChild className="hidden h-11 rounded-full bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-black lg:inline-flex">
             <Link
               href={whatsappHref}
               target="_blank"
@@ -86,14 +128,14 @@ export async function SiteHeader() {
           </Button>
         </div>
       </div>
-      <nav className="hidden bg-black text-white sm:block" aria-label="Product categories">
+      <nav className="hidden bg-white text-stone-950 sm:block" aria-label="Product categories">
         <div className="no-scrollbar mx-auto w-full max-w-[1600px] touch-pan-x overflow-x-auto overscroll-x-contain scroll-smooth px-4 sm:px-6 lg:px-8">
-          <div className="flex h-10 min-w-max items-center justify-start gap-6 whitespace-nowrap text-xs font-bold sm:h-11 sm:gap-8 sm:text-sm lg:justify-center xl:gap-10">
+          <div className="flex h-11 min-w-max items-center justify-start gap-3 whitespace-nowrap text-xs font-bold sm:gap-4 sm:text-sm lg:justify-center xl:gap-5">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="inline-flex h-full items-center whitespace-nowrap border-b-2 border-transparent px-0.5 transition-colors hover:border-white/80 hover:text-white/90 sm:px-0"
+                className="inline-flex h-8 items-center whitespace-nowrap rounded-full px-3 transition-colors hover:bg-neutral-100 hover:text-stone-950"
               >
                 {item.label}
               </Link>

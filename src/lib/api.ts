@@ -1,5 +1,6 @@
 import type {
   Brand,
+  Banner,
   Category,
   PaginatedProducts,
   Product,
@@ -72,14 +73,27 @@ function firstNumber(...values: unknown[]): number | null {
 function absolutizeImage(src?: string | null): string | null {
   if (!src) return null;
   if (src.startsWith("http://") || src.startsWith("https://")) return src;
-  if (src.startsWith("/")) {
-    try {
-      return new URL(src, API_URL).toString();
-    } catch {
-      return src;
-    }
+  try {
+    return new URL(src, API_URL.endsWith("/") ? API_URL : `${API_URL}/`).toString();
+  } catch {
+    return src;
   }
-  return src;
+}
+
+function isBlockedBrandLogo(src?: string | null) {
+  if (!src) return false;
+
+  try {
+    const { hostname } = new URL(src);
+    return hostname === "logos-world.net" || hostname.endsWith(".logos-world.net");
+  } catch {
+    return false;
+  }
+}
+
+function safeBrandLogo(src?: string | null) {
+  const image = absolutizeImage(src);
+  return isBlockedBrandLogo(image) ? null : image;
 }
 
 function extractArray(payload: unknown, keys: string[]): unknown[] {
@@ -149,7 +163,7 @@ function normalizeBrand(value: unknown): Brand | null {
   const id = firstString(value.id, value._id, value.slug, name);
   if (!id || !name) return null;
 
-  const logo = absolutizeImage(firstString(value.logo, value.image, value.imageUrl, value.thumbnail));
+  const logo = safeBrandLogo(firstString(value.logo, value.image, value.imageUrl, value.thumbnail));
 
   return {
     id,
@@ -158,6 +172,36 @@ function normalizeBrand(value: unknown): Brand | null {
     logo,
     image: logo,
     description: firstString(value.description) ?? null,
+  };
+}
+
+function normalizeBanner(value: unknown): Banner | null {
+  if (!isRecord(value)) return null;
+
+  const id = firstString(value.id, value._id, value.slug, value.image, value.imageUrl);
+  const image = absolutizeImage(
+    firstString(value.image, value.imageUrl, value.mobileImage, value.desktopImage, value.thumbnail),
+  );
+  if (!id || !image) return null;
+
+  const isActive =
+    typeof value.isActive === "boolean"
+      ? value.isActive
+      : typeof value.active === "boolean"
+        ? value.active
+        : typeof value.enabled === "boolean"
+          ? value.enabled
+          : null;
+
+  return {
+    id,
+    image,
+    title: firstString(value.title, value.name) ?? null,
+    subtitle: firstString(value.subtitle, value.description) ?? null,
+    cta: firstString(value.cta, value.ctaLabel, value.buttonText) ?? null,
+    link: firstString(value.link, value.href, value.url) ?? null,
+    isActive,
+    order: firstNumber(value.order, value.sortOrder, value.position),
   };
 }
 
@@ -385,6 +429,19 @@ export async function getBrands(): Promise<Brand[]> {
     return extractArray(payload, ["brands", "data", "items", "results"])
       .map(normalizeBrand)
       .filter((brand): brand is Brand => Boolean(brand));
+  } catch {
+    return [];
+  }
+}
+
+export async function getBanners(): Promise<Banner[]> {
+  try {
+    const payload = await fetchJson("/banners");
+    return extractArray(payload, ["banners", "data", "items", "results"])
+      .map(normalizeBanner)
+      .filter((banner): banner is Banner => Boolean(banner))
+      .filter((banner) => banner.isActive !== false)
+      .sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
   } catch {
     return [];
   }
