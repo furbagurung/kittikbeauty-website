@@ -43,10 +43,10 @@ export function ProductListingClient({
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <div className="rounded-lg border border-stone-200 bg-white p-3 shadow-[0_14px_45px_rgba(28,25,23,0.06)] sm:p-5">
+      <div className="rounded-lg border border-brandGold/25 bg-white p-3 shadow-[0_14px_45px_rgba(0,69,31,0.06)] sm:p-5">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_220px]">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-stone-400" />
+            <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-brandEmerald" />
             <Input
               value={search}
               onChange={(event) => {
@@ -54,7 +54,7 @@ export function ProductListingClient({
                 setVisible(24);
               }}
               placeholder="Search products"
-              className="h-11 rounded-md border-stone-300 bg-white pl-11 text-base font-medium shadow-none sm:h-[52px] sm:pl-12"
+              className="h-11 rounded-md border-brandGold/35 bg-white pl-11 text-base font-medium shadow-none sm:h-[52px] sm:pl-12"
             />
           </div>
           <Select
@@ -64,7 +64,7 @@ export function ProductListingClient({
               setVisible(24);
             }}
           >
-            <SelectTrigger className="h-11 w-full rounded-md border-stone-300 bg-white px-4 font-medium shadow-none sm:h-[52px]">
+            <SelectTrigger className="h-11 w-full rounded-md border-brandGold/35 bg-white px-4 font-medium shadow-none sm:h-[52px]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
@@ -77,7 +77,7 @@ export function ProductListingClient({
             </SelectContent>
           </Select>
           <Select value={sort} onValueChange={setSort}>
-            <SelectTrigger className="h-11 w-full rounded-md border-stone-300 bg-white px-4 font-medium shadow-none sm:h-[52px]">
+            <SelectTrigger className="h-11 w-full rounded-md border-brandGold/35 bg-white px-4 font-medium shadow-none sm:h-[52px]">
               <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>
@@ -89,7 +89,7 @@ export function ProductListingClient({
         </div>
       </div>
 
-      <div className="border-b border-stone-200 pb-3 text-sm font-medium text-stone-500 sm:pb-4">
+      <div className="border-b border-brandGold/25 pb-3 text-sm font-medium text-[#5F5F5F] sm:pb-4">
         <span>{filteredProducts.length} products</span>
       </div>
 
@@ -107,7 +107,7 @@ export function ProductListingClient({
         <div className="flex justify-center">
           <Button
             variant="outline"
-            className="h-11 rounded-md border-stone-950 bg-white px-8 font-bold"
+            className="h-11 rounded-md border-brandGreen bg-white px-8 font-bold text-brandEmerald hover:bg-brandCream"
             onClick={() => setVisible((current) => current + 24)}
           >
             Load more

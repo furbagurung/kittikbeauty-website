@@ -26,7 +26,7 @@ export function ProductCarouselSection({
         <SectionHeading
           title={title}
           action={
-            <Button asChild variant="outline" className="h-10 rounded-full border-neutral-200 bg-white px-4 text-sm font-bold text-stone-950 hover:bg-neutral-100">
+            <Button asChild variant="outline" className="h-10 rounded-full border-brandGold/35 bg-white px-4 text-sm font-bold text-brandEmerald hover:bg-brandCream">
               <Link href="/products">View all</Link>
             </Button>
           }

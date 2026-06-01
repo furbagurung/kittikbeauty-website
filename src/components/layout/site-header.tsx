@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, ShoppingBag, UserRound } from "lucide-react";
+import { MessageCircle, ShoppingBag } from "lucide-react";
 
+import { CustomerAccountIconLink } from "@/components/layout/customer-account-link";
 import { HeaderSearch } from "@/components/layout/header-search";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { Button } from "@/components/ui/button";
@@ -30,7 +32,7 @@ const categoryLinks: HeaderCategoryLink[] = [
 ];
 
 export async function SiteHeader() {
-  const [{ products }, categories] = await Promise.all([getProducts(1, 50), getCategories()]);
+  const [{ products }, categories] = await Promise.all([getProducts(1, 500), getCategories()]);
   const whatsappHref = createWhatsappLink("Hi, I want to ask about Kittik Beauty products.");
 
   const navLinks: Array<{ label: string; href: string }> = categoryLinks.map((item) => {
@@ -54,42 +56,43 @@ export async function SiteHeader() {
   });
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-xl">
-      <div className="flex h-7 items-center justify-center bg-neutral-950 px-4 text-center text-[11px] font-bold tracking-[0.02em] text-white sm:h-8 sm:text-[13px]">
-        Authentic beauty picks | WhatsApp support | Delivery available
-      </div>
-      <div className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-1.5 px-3 py-1.5 sm:h-[72px] sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-0 lg:px-8">
-          <div className="flex min-h-9 items-center justify-between gap-3 sm:min-h-0">
-            <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-40 border-b border-brandGold/30 bg-white/95 backdrop-blur-xl">
+      <div className="border-b border-brandGold/25 bg-white">
+        <div className="mx-auto flex w-full max-w-[1304px] flex-col gap-2 px-3 py-2 sm:h-16 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6 sm:py-1.5 lg:px-8">
+          <div className="grid min-h-[50px] grid-cols-[80px_minmax(0,1fr)_80px] items-center gap-2 sm:flex sm:min-h-0 sm:shrink-0 sm:grid-cols-none sm:gap-3">
+            <div className="flex items-center justify-start">
               <MobileNavigation navLinks={navLinks} />
+            </div>
+            <div className="flex items-center justify-center sm:justify-start">
               <Link
                 href="/"
-                className="shrink-0 rounded-full bg-stone-950 px-3 py-1.5 text-[12px] font-black tracking-[0.08em] text-white uppercase shadow-[0_10px_24px_rgba(28,25,23,0.12)] sm:bg-transparent sm:px-0 sm:py-0 sm:text-xl sm:tracking-[0.12em] sm:text-stone-950 sm:shadow-none"
+                className="flex shrink-0 items-center justify-center"
                 aria-label="Kittik Beauty home"
               >
-                Kittik Beauty
+                <Image
+                  src="/images/kittik-logo.png"
+                  alt="Kittik Beauty"
+                  width={200}
+                  height={74}
+                  priority
+                  className="h-auto max-h-[44px] w-auto object-contain md:max-h-[42px]"
+                />
               </Link>
             </div>
-            <div className="flex items-center gap-1.5 sm:hidden">
+            <div className="flex items-center justify-end gap-1.5 sm:hidden">
               <Link
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex size-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-stone-950"
+                className="inline-flex size-9 items-center justify-center rounded-full border border-brandGold/35 bg-white text-brandEmerald"
                 aria-label="Cart support"
               >
                 <ShoppingBag className="size-4.5" aria-hidden="true" />
               </Link>
-              <Link
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex size-9 items-center justify-center rounded-full bg-stone-950 text-white"
-                aria-label="Account support"
-              >
-                <UserRound className="size-4.5" aria-hidden="true" />
-              </Link>
+              <CustomerAccountIconLink
+                className="inline-flex size-9 items-center justify-center rounded-full bg-brandGreen text-white"
+                iconClassName="size-4.5"
+              />
             </div>
           </div>
 
@@ -100,23 +103,18 @@ export async function SiteHeader() {
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex size-11 items-center justify-center rounded-full border border-neutral-200 bg-white text-stone-950 transition hover:bg-neutral-100"
+              className="inline-flex size-11 items-center justify-center rounded-full border border-brandGold/35 bg-white text-brandEmerald transition hover:bg-brandCream"
               aria-label="Cart support"
             >
               <ShoppingBag className="size-5" aria-hidden="true" />
             </Link>
-            <Link
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex size-11 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-950 transition hover:bg-stone-50"
-              aria-label="Account support"
-            >
-              <UserRound className="size-5" aria-hidden="true" />
-            </Link>
+            <CustomerAccountIconLink
+              className="inline-flex size-11 items-center justify-center rounded-full border border-brandGold/35 bg-white text-brandEmerald transition hover:bg-brandCream"
+              iconClassName="size-5"
+            />
           </div>
 
-          <Button asChild className="hidden h-11 rounded-full bg-stone-950 px-5 text-[15px] font-bold text-white hover:bg-black lg:inline-flex">
+          <Button asChild className="hidden h-11 rounded-full bg-brandGreen px-5 text-[15px] font-bold text-white hover:bg-brandEmerald lg:inline-flex">
             <Link
               href={whatsappHref}
               target="_blank"
@@ -128,14 +126,14 @@ export async function SiteHeader() {
           </Button>
         </div>
       </div>
-      <nav className="hidden bg-white text-stone-950 sm:block" aria-label="Product categories">
+      <nav className="hidden bg-white text-brandEmerald sm:block" aria-label="Product categories">
         <div className="no-scrollbar mx-auto w-full max-w-[1600px] touch-pan-x overflow-x-auto overscroll-x-contain scroll-smooth px-4 sm:px-6 lg:px-8">
           <div className="flex h-11 min-w-max items-center justify-start gap-3 whitespace-nowrap text-xs font-bold sm:gap-4 sm:text-sm lg:justify-center xl:gap-5">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="inline-flex h-8 items-center whitespace-nowrap rounded-full px-3 transition-colors hover:bg-neutral-100 hover:text-stone-950"
+                className="inline-flex h-8 items-center whitespace-nowrap rounded-full px-3 transition-colors hover:bg-brandCream hover:text-brandGreen"
               >
                 {item.label}
               </Link>

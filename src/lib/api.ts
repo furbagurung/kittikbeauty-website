@@ -10,6 +10,7 @@ import type {
   SubCategory,
 } from "@/types/product";
 import { productMatchesBrand, productMatchesCategory, productMatchesSubCategory, slugifyCategory } from "@/lib/category-utils";
+import { productSlug } from "@/lib/product-utils";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://kittikbeauty.com/api";
 
@@ -459,6 +460,8 @@ export async function getReels(limit = 8): Promise<Reel[]> {
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
+  const normalizedId = decodeURIComponent(id).toLowerCase();
+
   try {
     const payload = await fetchJson(`/products/${encodeURIComponent(id)}`);
     const product = normalizeProduct(isRecord(payload) && "data" in payload ? payload.data : payload);
@@ -468,5 +471,15 @@ export async function getProductById(id: string): Promise<Product | null> {
   }
 
   const { products } = await getProducts(1, 100);
-  return products.find((product) => product.id === id || product.slug === id) ?? null;
+  return (
+    products.find((product) => {
+      return (
+        product.id === id ||
+        product.slug === id ||
+        product.id.toLowerCase() === normalizedId ||
+        product.slug?.toLowerCase() === normalizedId ||
+        productSlug(product).toLowerCase() === normalizedId
+      );
+    }) ?? null
+  );
 }

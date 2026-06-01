@@ -1,5 +1,17 @@
 import type { Product } from "@/types/product";
 
+export function slugifyProductTitle(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function productSlug(product: Pick<Product, "id" | "name" | "slug">) {
+  return product.slug || slugifyProductTitle(product.name) || product.id;
+}
+
 export function formatPrice(price?: number | null) {
   if (price === null || price === undefined) return "Price on request";
   return new Intl.NumberFormat("en-NP", {
@@ -10,7 +22,7 @@ export function formatPrice(price?: number | null) {
 }
 
 export function productHref(product: Product) {
-  return `/products/${encodeURIComponent(product.slug || product.id)}`;
+  return `/products/${encodeURIComponent(productSlug(product))}`;
 }
 
 export function stockLabel(product: Product) {

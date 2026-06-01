@@ -9,7 +9,7 @@ export function PageShell({ children }: { children: ReactNode }) {
   const whatsappHref = createWhatsappLink("Hi, I want to ask about Kittik Beauty products.");
 
   return (
-    <div className="flex min-h-screen flex-col bg-white text-stone-950">
+    <div className="flex min-h-screen flex-col bg-brandCream text-[#111111]">
       <SiteHeader />
       <main className="flex-1 pb-[calc(112px+env(safe-area-inset-bottom))] sm:pb-0">{children}</main>
       <SiteFooter />

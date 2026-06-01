@@ -112,7 +112,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 </p>
                 <Link
                   href="/products"
-                  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-stone-950 px-6 text-sm font-bold text-white hover:bg-black"
+                  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-brandGreen px-6 text-sm font-bold text-white hover:bg-brandEmerald"
                 >
                   Browse all products
                   <ArrowRight className="size-4" aria-hidden="true" />

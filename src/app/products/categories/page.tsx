@@ -68,7 +68,7 @@ export default async function ProductCategoriesPage() {
               <p className="mt-2 text-sm leading-6 text-stone-600">Browse all products while categories are being prepared.</p>
               <Link
                 href="/products"
-                className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-stone-950 px-6 text-sm font-bold text-white hover:bg-black"
+                className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-brandGreen px-6 text-sm font-bold text-white hover:bg-brandEmerald"
               >
                 Browse all products
                 <ArrowRight className="size-4" aria-hidden="true" />
@@ -76,16 +76,16 @@ export default async function ProductCategoriesPage() {
             </div>
           )}
 
-          <div className="mt-8 grid items-center gap-5 rounded-lg border border-stone-950 bg-stone-950 p-5 text-white sm:mt-10 sm:p-8 lg:grid-cols-[1fr_auto] lg:p-10">
+          <div className="mt-8 grid items-center gap-5 rounded-lg border border-brandGold/35 bg-brandGreen p-5 text-white sm:mt-10 sm:p-8 lg:grid-cols-[1fr_auto] lg:p-10">
             <div>
               <h2 className="text-2xl font-bold tracking-tight sm:text-4xl">Find your daily beauty essentials</h2>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-stone-300 sm:text-base">
+              <p className="mt-2 max-w-xl text-sm leading-6 text-white/75 sm:text-base">
                 Browse products curated for your everyday routine.
               </p>
             </div>
             <Link
               href="/products"
-              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-bold text-stone-950 transition-colors hover:bg-stone-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 sm:w-auto"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-bold text-brandEmerald transition-colors hover:bg-[#F3E7C3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brandGreen sm:w-auto"
             >
               Explore all products
               <ArrowRight className="size-4" aria-hidden="true" />

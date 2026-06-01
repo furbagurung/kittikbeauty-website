@@ -181,13 +181,13 @@ export default function MakeupServicesPage() {
       <section className="bg-white">
         <div className="mx-auto grid w-full max-w-[1304px] gap-7 px-4 py-8 sm:px-6 sm:py-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center lg:px-8 lg:py-16">
           <div>
-            <p className="text-xs font-bold tracking-[0.16em] text-stone-500 uppercase">
+            <p className="text-xs font-bold tracking-[0.16em] text-[#5F5F5F] uppercase">
               Kittik Beauty makeup service
             </p>
-            <h1 className="mt-3 max-w-4xl text-[34px] font-black leading-[1.02] tracking-tight text-stone-950 sm:text-5xl lg:text-6xl">
+            <h1 className="mt-3 max-w-4xl text-[34px] font-black leading-[1.02] tracking-tight text-brandEmerald sm:text-5xl lg:text-6xl">
               Professional Makeup Artist Services in Nepal
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg sm:leading-8">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#5F5F5F] sm:text-lg sm:leading-8">
               Book professional makeup services for weddings, engagements,
               parties, photoshoots, and special events with Kittik Beauty.
             </p>
@@ -196,14 +196,14 @@ export default function MakeupServicesPage() {
                 href={createWhatsappLink(bookingMessage())}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-stone-950 px-6 text-sm font-bold text-white transition hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brandGreen px-6 text-sm font-bold text-white transition hover:bg-brandEmerald focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandGold"
               >
                 <MessageCircle className="size-4" aria-hidden="true" />
                 Book on WhatsApp
               </Link>
               <Link
                 href="#services"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-neutral-300 bg-white px-6 text-sm font-bold text-stone-950 transition hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-brandGold/35 bg-white px-6 text-sm font-bold text-brandEmerald transition hover:bg-brandCream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandGold"
               >
                 View Services
                 <ArrowRight className="size-4" aria-hidden="true" />
@@ -211,13 +211,13 @@ export default function MakeupServicesPage() {
             </div>
           </div>
 
-          <div className="rounded-[26px] border border-neutral-200 bg-neutral-50 p-5 shadow-[0_18px_48px_rgba(24,24,27,0.08)]">
-            <p className="text-sm font-bold text-stone-950">Available for</p>
+          <div className="rounded-[26px] border border-brandGold/25 bg-brandCream p-5 shadow-[0_18px_48px_rgba(0,69,31,0.08)]">
+            <p className="text-sm font-bold text-brandEmerald">Available for</p>
             <div className="mt-4 grid gap-2">
               {services.map((service) => (
                 <div
                   key={service.name}
-                  className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-bold text-stone-950"
+                  className="flex items-center gap-3 rounded-2xl border border-brandGold/25 bg-white px-4 py-3 text-sm font-bold text-brandEmerald"
                 >
                   <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
                   {service.name}
@@ -231,10 +231,10 @@ export default function MakeupServicesPage() {
       <section id="services" className="bg-white">
         <div className="mx-auto w-full max-w-[1304px] px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
           <div className="max-w-2xl">
-            <h2 className="text-[26px] font-black leading-tight tracking-tight text-stone-950 sm:text-4xl">
+            <h2 className="text-[26px] font-black leading-tight tracking-tight text-brandEmerald sm:text-4xl">
               Makeup Services
             </h2>
-            <p className="mt-2 text-sm leading-6 text-stone-600 sm:text-base">
+            <p className="mt-2 text-sm leading-6 text-[#5F5F5F] sm:text-base">
               Choose a professional makeup artist service and send your booking
               details directly through WhatsApp.
             </p>
@@ -244,16 +244,16 @@ export default function MakeupServicesPage() {
             {services.map((service) => (
               <article
                 key={service.name}
-                className="flex min-h-[220px] flex-col rounded-[22px] border border-neutral-200 bg-white p-4 shadow-[0_10px_28px_rgba(24,24,27,0.06)]"
+                className="flex min-h-[220px] flex-col rounded-[22px] border border-brandGold/25 bg-white p-4 shadow-[0_10px_28px_rgba(0,69,31,0.05)]"
               >
                 <div className="flex-1">
-                  <h3 className="text-base font-black leading-tight text-stone-950">
+                  <h3 className="text-base font-black leading-tight text-brandEmerald">
                     {service.name}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-stone-600">
+                  <p className="mt-2 text-sm leading-6 text-[#5F5F5F]">
                     {service.description}
                   </p>
-                  <p className="mt-3 text-xs font-bold uppercase tracking-[0.08em] text-stone-500">
+                  <p className="mt-3 text-xs font-bold uppercase tracking-[0.08em] text-brandGold">
                     Price on consultation
                   </p>
                 </div>
@@ -261,7 +261,7 @@ export default function MakeupServicesPage() {
                   href={createWhatsappLink(bookingMessage(service.name))}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex h-10 items-center justify-center rounded-full bg-stone-950 px-4 text-sm font-bold text-white transition hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950"
+                  className="mt-4 inline-flex h-10 items-center justify-center rounded-full bg-brandGreen px-4 text-sm font-bold text-white transition hover:bg-brandEmerald focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandGold"
                 >
                   Book on WhatsApp
                 </Link>
@@ -273,31 +273,31 @@ export default function MakeupServicesPage() {
 
       <section className="bg-white">
         <div className="mx-auto grid w-full max-w-[1304px] gap-4 px-4 py-7 sm:px-6 sm:py-10 lg:grid-cols-2 lg:px-8">
-          <div className="rounded-[24px] border border-neutral-200 bg-white p-5 shadow-[0_10px_28px_rgba(24,24,27,0.05)] sm:p-6">
-            <h2 className="text-2xl font-black tracking-tight text-stone-950">
+          <div className="rounded-[24px] border border-brandGold/25 bg-white p-5 shadow-[0_10px_28px_rgba(0,69,31,0.05)] sm:p-6">
+            <h2 className="text-2xl font-black tracking-tight text-brandEmerald">
               Why Choose Kittik Beauty
             </h2>
             <div className="mt-5 grid gap-3">
               {reasons.map((reason) => (
-                <div key={reason} className="flex gap-3 text-sm leading-6 text-stone-700">
-                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-stone-950" aria-hidden="true" />
+                <div key={reason} className="flex gap-3 text-sm leading-6 text-[#5F5F5F]">
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-brandGold" aria-hidden="true" />
                   <span>{reason}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-neutral-200 bg-neutral-50 p-5 sm:p-6">
-            <h2 className="text-2xl font-black tracking-tight text-stone-950">
+          <div className="rounded-[24px] border border-brandGold/25 bg-brandCream p-5 sm:p-6">
+            <h2 className="text-2xl font-black tracking-tight text-brandEmerald">
               Makeup Booking Process
             </h2>
             <div className="mt-5 grid gap-3">
               {bookingSteps.map((step, index) => (
                 <div key={step} className="grid grid-cols-[36px_minmax(0,1fr)] gap-3">
-                  <span className="flex size-9 items-center justify-center rounded-full bg-stone-950 text-sm font-black text-white">
+                  <span className="flex size-9 items-center justify-center rounded-full bg-brandGreen text-sm font-black text-white">
                     {index + 1}
                   </span>
-                  <div className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-bold text-stone-950">
+                  <div className="rounded-2xl border border-brandGold/25 bg-white px-4 py-3 text-sm font-bold text-brandEmerald">
                     {step}
                   </div>
                 </div>
@@ -309,16 +309,16 @@ export default function MakeupServicesPage() {
 
       <section className="bg-white">
         <div className="mx-auto w-full max-w-[980px] px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
-          <h2 className="text-[26px] font-black leading-tight tracking-tight text-stone-950 sm:text-4xl">
+          <h2 className="text-[26px] font-black leading-tight tracking-tight text-brandEmerald sm:text-4xl">
             Makeup Service FAQs
           </h2>
-          <div className="mt-5 divide-y divide-neutral-200 rounded-[24px] border border-neutral-200 bg-white">
+          <div className="mt-5 divide-y divide-brandGold/25 rounded-[24px] border border-brandGold/25 bg-white">
             {faqs.map((faq) => (
               <div key={faq.question} className="p-4 sm:p-5">
-                <h3 className="text-base font-black text-stone-950">
+                <h3 className="text-base font-black text-brandEmerald">
                   {faq.question}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-stone-600">
+                <p className="mt-2 text-sm leading-6 text-[#5F5F5F]">
                   {faq.answer}
                 </p>
               </div>
@@ -329,11 +329,11 @@ export default function MakeupServicesPage() {
 
       <section className="bg-white">
         <div className="mx-auto w-full max-w-[1304px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-          <div className="rounded-[26px] bg-stone-950 p-6 text-white sm:p-8 lg:p-10">
+          <div className="rounded-[26px] bg-brandGreen p-6 text-white sm:p-8 lg:p-10">
             <h2 className="text-[28px] font-black leading-tight tracking-tight sm:text-4xl">
               Ready to book your makeup look?
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-300 sm:text-base">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75 sm:text-base">
               Send your service, date, time, and location to Kittik Beauty on
               WhatsApp for makeup booking in Nepal.
             </p>
@@ -341,7 +341,7 @@ export default function MakeupServicesPage() {
               href={createWhatsappLink(bookingMessage())}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-stone-950 transition hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-brandEmerald transition hover:bg-[#F3E7C3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <MessageCircle className="size-4" aria-hidden="true" />
               Book on WhatsApp

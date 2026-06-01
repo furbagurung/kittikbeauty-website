@@ -6,10 +6,10 @@ import { buildCategorySummaries, categoryHref } from "@/lib/category-utils";
 import type { Category, Product, SubCategory } from "@/types/product";
 
 const fallbackVisuals = [
-  "bg-[linear-gradient(135deg,#ffffff,#e5e5e5)]",
-  "bg-[linear-gradient(135deg,#fafafa,#d4d4d4)]",
-  "bg-[linear-gradient(135deg,#f5f5f5,#e4e4e7)]",
-  "bg-[linear-gradient(135deg,#ffffff,#d6d3d1)]",
+  "bg-[linear-gradient(135deg,#ffffff,#FAF7F0)]",
+  "bg-[linear-gradient(135deg,#ffffff,#F3E7C3)]",
+  "bg-[linear-gradient(135deg,#FAF7F0,#ffffff)]",
+  "bg-[linear-gradient(135deg,#ffffff,rgba(214,178,83,0.28))]",
 ];
 
 export function CategorySection({
@@ -26,10 +26,10 @@ export function CategorySection({
     <section id="categories" className="bg-white">
       <div className="mx-auto w-full max-w-[1304px] px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
         <div className="flex items-end justify-between gap-4">
-          <h2 className="text-[22px] font-black leading-tight tracking-tight text-stone-950 sm:text-[28px]">
+          <h2 className="text-[22px] font-black leading-tight tracking-tight text-brandEmerald sm:text-[28px]">
             Shop by category
           </h2>
-          <Link href="/products/categories" className="text-sm font-bold text-stone-950 hover:text-neutral-600">
+          <Link href="/products/categories" className="text-sm font-bold text-brandGreen hover:text-brandEmerald">
             View all
           </Link>
         </div>
@@ -43,9 +43,9 @@ export function CategorySection({
             <Link
               key={`${category.id}-${category.slugValue}`}
               href={categoryHref(category)}
-              className="group flex w-[92px] shrink-0 snap-start flex-col items-center gap-3 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 min-[400px]:w-[104px] sm:w-[132px]"
+              className="group flex w-[92px] shrink-0 snap-start flex-col items-center gap-3 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brandGold focus-visible:ring-offset-4 min-[400px]:w-[104px] sm:w-[132px]"
             >
-                <span className="relative block aspect-square w-full overflow-hidden rounded-full border border-neutral-300 bg-neutral-100 p-1 transition duration-300 group-hover:-translate-y-1 group-hover:border-stone-950">
+                <span className="relative block aspect-square w-full overflow-hidden rounded-full border border-brandGold/35 bg-brandCream p-1 transition duration-300 group-hover:-translate-y-1 group-hover:border-brandGold">
                   <span className="relative block h-full w-full overflow-hidden rounded-full">
                   {category.image ? (
                     <ProductImage
@@ -60,7 +60,7 @@ export function CategorySection({
                   )}
                   </span>
                 </span>
-              <h3 className="line-clamp-2 text-[12px] font-extrabold leading-tight text-stone-950 sm:text-sm">
+              <h3 className="line-clamp-2 text-[12px] font-extrabold leading-tight text-brandEmerald sm:text-sm">
                 {category.name}
               </h3>
             </Link>

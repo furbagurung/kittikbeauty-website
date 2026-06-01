@@ -6,10 +6,10 @@ import { brandHref, buildBrandSummaries } from "@/lib/category-utils";
 import type { Brand, Product } from "@/types/product";
 
 const fallbackVisuals = [
-  "bg-[linear-gradient(135deg,#ffffff,#e5e5e5)]",
-  "bg-[linear-gradient(135deg,#fafafa,#d4d4d4)]",
-  "bg-[linear-gradient(135deg,#f5f5f5,#e4e4e7)]",
-  "bg-[linear-gradient(135deg,#ffffff,#d6d3d1)]",
+  "bg-[linear-gradient(135deg,#ffffff,#FAF7F0)]",
+  "bg-[linear-gradient(135deg,#ffffff,#F3E7C3)]",
+  "bg-[linear-gradient(135deg,#FAF7F0,#ffffff)]",
+  "bg-[linear-gradient(135deg,#ffffff,rgba(214,178,83,0.28))]",
 ];
 
 export function BrandSection({
@@ -27,7 +27,7 @@ export function BrandSection({
     <section id="brands" className="bg-white">
       <div className="mx-auto w-full max-w-[1304px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <div className="text-left">
-          <h2 className="text-[22px] font-black leading-tight tracking-tight text-stone-950 sm:text-[28px]">
+          <h2 className="text-[22px] font-black leading-tight tracking-tight text-brandEmerald sm:text-[28px]">
             Brands we love
           </h2>
         </div>
@@ -41,7 +41,7 @@ export function BrandSection({
             <Link
               key={`${brand.id}-${brand.slugValue}`}
               href={brandHref(brand)}
-              className="group relative flex aspect-square w-[104px] shrink-0 snap-start items-center justify-center overflow-hidden rounded-[24px] border border-neutral-200 bg-white shadow-[0_10px_28px_rgba(24,24,27,0.06)] transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-4 min-[420px]:w-[118px] sm:w-[140px] lg:w-[148px]"
+              className="group relative flex aspect-square w-[104px] shrink-0 snap-start items-center justify-center overflow-hidden rounded-[24px] border border-brandGold/20 bg-white shadow-[0_10px_28px_rgba(0,69,31,0.05)] transition hover:-translate-y-1 hover:border-brandGold/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brandGold focus-visible:ring-offset-4 min-[420px]:w-[118px] sm:w-[140px] lg:w-[148px]"
               aria-label={`Shop ${brand.name}`}
             >
               {brand.image ? (
@@ -54,7 +54,7 @@ export function BrandSection({
                 />
               ) : (
                 <div className={`flex h-full w-full items-center justify-center ${fallbackVisuals[index % fallbackVisuals.length]}`}>
-                  <span className="line-clamp-2 px-3 text-center text-sm font-black leading-tight text-stone-950 sm:text-base">
+                  <span className="line-clamp-2 px-3 text-center text-sm font-black leading-tight text-brandEmerald sm:text-base">
                     {brand.name}
                   </span>
                 </div>

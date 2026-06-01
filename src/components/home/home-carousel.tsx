@@ -55,7 +55,7 @@ export function HomeCarousel({
         <button
           type="button"
           onClick={() => scrollTrack("left")}
-          className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-950 shadow-sm transition hover:border-stone-950 hover:bg-stone-950 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2"
+          className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full border border-brandGold/45 bg-white text-brandEmerald shadow-sm transition hover:border-brandGold hover:bg-brandGreen hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brandGold focus-visible:ring-offset-2"
           aria-label="Scroll left"
         >
           <ChevronLeft className="size-5" aria-hidden="true" />
@@ -63,7 +63,7 @@ export function HomeCarousel({
         <button
           type="button"
           onClick={() => scrollTrack("right")}
-          className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-950 shadow-sm transition hover:border-stone-950 hover:bg-stone-950 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2"
+          className="pointer-events-auto inline-flex size-10 items-center justify-center rounded-full border border-brandGold/45 bg-white text-brandEmerald shadow-sm transition hover:border-brandGold hover:bg-brandGreen hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brandGold focus-visible:ring-offset-2"
           aria-label="Scroll right"
         >
           <ChevronRight className="size-5" aria-hidden="true" />
@@ -82,7 +82,7 @@ export function HomeCarousel({
             <span
               key={index}
               className={`h-0.5 w-8 transition-colors duration-200 ${
-                index === activeIndex ? "bg-red-800" : "bg-stone-400"
+                index === activeIndex ? "bg-brandGold" : "bg-brandGold/30"
               }`}
             />
           ))}

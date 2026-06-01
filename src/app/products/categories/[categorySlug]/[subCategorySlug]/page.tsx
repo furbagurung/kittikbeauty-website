@@ -138,7 +138,7 @@ export default async function SubCategoryPage({ params }: SubCategoryPageProps) 
                 </p>
                 <Link
                   href={categoryHref}
-                  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-stone-950 px-6 text-sm font-bold text-white hover:bg-black"
+                  className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-brandGreen px-6 text-sm font-bold text-white hover:bg-brandEmerald"
                 >
                   Browse {category.name}
                   <ArrowRight className="size-4" aria-hidden="true" />

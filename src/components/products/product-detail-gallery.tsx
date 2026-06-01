@@ -5,20 +5,29 @@ import { cn } from "@/lib/utils";
 
 type ProductDetailGalleryProps = {
   productName: string;
+  brandName?: string | null;
+  categoryName?: string | null;
   images: string[];
   selectedIndex: number;
 };
 
-export function ProductDetailGallery({ productName, images, selectedIndex }: ProductDetailGalleryProps) {
+export function ProductDetailGallery({
+  productName,
+  categoryName,
+  images,
+  selectedIndex,
+}: ProductDetailGalleryProps) {
   const visibleImages = images.slice(0, 6);
   const selectedImage = visibleImages[selectedIndex] ?? null;
+  const productType = categoryName ? categoryName.toLowerCase() : "beauty";
+  const mainAlt = `${productName} ${productType} product available at Kittik Beauty Nepal`;
 
   return (
     <div className="space-y-2.5 sm:space-y-4">
-      <div className="relative aspect-[5/4] overflow-hidden border border-stone-200 bg-stone-50 sm:aspect-square">
+      <div className="relative aspect-[5/4] overflow-hidden border border-brandGold/25 bg-brandCream sm:aspect-square">
         <ProductImage
           src={selectedImage}
-          alt={productName}
+          alt={mainAlt}
           priority
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-contain p-2.5 sm:p-6"
@@ -34,14 +43,19 @@ export function ProductDetailGallery({ productName, images, selectedIndex }: Pro
               href={`?image=${index + 1}`}
               scroll={false}
               className={cn(
-                "relative aspect-square w-[68px] shrink-0 overflow-hidden border bg-stone-50 transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-950 min-[420px]:w-20 sm:w-auto",
-                isSelected ? "border-stone-950" : "border-stone-200 hover:border-stone-500",
+                "relative aspect-square w-[68px] shrink-0 overflow-hidden border bg-brandCream transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandGold min-[420px]:w-20 sm:w-auto",
+                isSelected ? "border-brandGreen" : "border-brandGold/25 hover:border-brandGold",
               )}
               aria-label={`View ${productName} image ${index + 1}`}
               aria-current={isSelected ? "true" : undefined}
             >
-              <ProductImage src={image} alt={`${productName} ${index + 1}`} sizes="120px" className="object-contain p-2 sm:p-2.5" />
-              {isSelected ? <span className="absolute inset-x-0 bottom-0 h-0.5 bg-stone-950" /> : null}
+              <ProductImage
+                src={image}
+                alt={`${productName} product thumbnail ${index + 1} at Kittik Beauty Nepal`}
+                sizes="120px"
+                className="object-contain p-2 sm:p-2.5"
+              />
+              {isSelected ? <span className="absolute inset-x-0 bottom-0 h-0.5 bg-brandGreen" /> : null}
             </Link>
           );
         })}

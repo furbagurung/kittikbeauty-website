@@ -89,22 +89,22 @@ export default async function Home() {
 
       <section className="bg-white">
         <div className="mx-auto w-full max-w-[1304px] px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
-          <div className="grid items-center gap-5 rounded-[22px] border border-neutral-200 bg-stone-950 p-5 text-white shadow-[0_18px_45px_rgba(24,24,27,0.14)] sm:gap-8 sm:p-8 lg:grid-cols-[1fr_auto] lg:p-10">
+          <div className="grid items-center gap-5 rounded-[22px] border border-brandGold/35 bg-brandGreen p-5 text-white shadow-[0_18px_45px_rgba(0,69,31,0.16)] sm:gap-8 sm:p-8 lg:grid-cols-[1fr_auto] lg:p-10">
             <div>
-              <p className="text-xs font-bold tracking-[0.16em] text-neutral-300 uppercase">
+              <p className="text-xs font-bold tracking-[0.16em] text-brandGold uppercase">
                 Featured routine
               </p>
               <h2 className="mt-2 text-[24px] font-black leading-tight tracking-tight sm:text-[34px]">
                 Glow essentials for every routine
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-300 sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75 sm:text-base sm:leading-7">
                 Skincare, complexion, lips, and finishing care selected for easy
                 product discovery.
               </p>
             </div>
             <Button
               asChild
-              className="h-10 rounded-full bg-white px-5 text-sm font-bold text-stone-950 hover:bg-neutral-100 sm:h-11 sm:px-7"
+              className="h-10 rounded-full bg-white px-5 text-sm font-bold text-brandEmerald hover:bg-[#F3E7C3] sm:h-11 sm:px-7"
             >
               <Link href="/products">
                 Browse catalog
