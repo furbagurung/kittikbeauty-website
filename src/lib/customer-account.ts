@@ -243,6 +243,16 @@ function normalizeProductList(values: unknown[]) {
   return values.map(normalizeProduct).filter((product): product is Product => Boolean(product));
 }
 
+function normalizeCustomerProductId(productId: string | number) {
+  const id = Number(productId);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error("Valid product id is required");
+  }
+
+  return id;
+}
+
 export async function getCustomerWishlist(token: string) {
   const response = await fetch(customerAccountUrl("/customers/wishlist"), {
     headers: customerHeaders(token),
@@ -254,17 +264,19 @@ export async function getCustomerWishlist(token: string) {
 }
 
 export async function addCustomerWishlistItem(token: string, productId: string | number) {
+  const normalizedProductId = normalizeCustomerProductId(productId);
   const response = await fetch(customerAccountUrl("/customers/wishlist"), {
     method: "POST",
     headers: customerHeaders(token),
-    body: JSON.stringify({ productId }),
+    body: JSON.stringify({ productId: normalizedProductId }),
   });
 
   return parseJsonResponse<{ message: string; productId: number }>(response);
 }
 
 export async function deleteCustomerWishlistItem(token: string, productId: string | number) {
-  const response = await fetch(customerAccountUrl(`/customers/wishlist/${productId}`), {
+  const normalizedProductId = normalizeCustomerProductId(productId);
+  const response = await fetch(customerAccountUrl(`/customers/wishlist/${normalizedProductId}`), {
     method: "DELETE",
     headers: customerHeaders(token),
   });
