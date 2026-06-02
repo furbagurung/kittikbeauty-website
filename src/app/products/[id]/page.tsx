@@ -6,6 +6,7 @@ import { CheckCircle2, ChevronLeft, Headphones, MapPin, ShieldCheck, Truck } fro
 import { ProductCard } from "@/components/products/product-card";
 import { ProductDetailActions } from "@/components/products/product-detail-actions";
 import { ProductDetailGallery } from "@/components/products/product-detail-gallery";
+import { RecentlyViewedTracker } from "@/components/products/recently-viewed-tracker";
 import { PageShell } from "@/components/shared/page-shell";
 import { getProductById, getProducts } from "@/lib/api";
 import { categoryHref } from "@/lib/category-utils";
@@ -283,6 +284,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
   return (
     <PageShell>
       <ProductStructuredData product={product} faqItems={faqItems} />
+      <RecentlyViewedTracker productId={product.id} />
       <section className="bg-white py-3 sm:py-7">
         <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-6">
           <nav aria-label="Breadcrumb" className="mb-3 overflow-x-auto pb-1 sm:mb-4">
@@ -352,7 +354,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
                 ) : null}
 
                 <div className="mt-5 sm:mt-8">
-                  <ProductDetailActions productName={product.name} />
+                  <ProductDetailActions productId={product.id} productName={product.name} />
                 </div>
 
                 <div className="mt-4 grid gap-2 sm:mt-8">

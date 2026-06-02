@@ -2,21 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Heart, Loader2, RefreshCw } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { useCustomerAuth } from "@/context/customer-auth-context";
 import { AccountAddresses } from "@/components/account/account-addresses";
-import { AccountModuleCards } from "@/components/account/account-module-cards";
 import { AccountOrders } from "@/components/account/account-orders";
 import { AccountPasswordForm } from "@/components/account/account-password-form";
 import { AccountProfileForm } from "@/components/account/account-profile-form";
 import { AccountProfileSummary } from "@/components/account/account-profile-summary";
+import { AccountRecentlyViewed } from "@/components/account/account-recently-viewed";
 import { AccountWelcome } from "@/components/account/account-welcome";
-
-const accountModules = [
-  { title: "Wishlist", description: "Saved products will appear here.", icon: Heart },
-  { title: "Recently Viewed", description: "Recently viewed products will appear here.", icon: RefreshCw },
-];
+import { AccountWishlist } from "@/components/account/account-wishlist";
 
 export function AccountDashboard() {
   const router = useRouter();
@@ -50,7 +46,11 @@ export function AccountDashboard() {
 
         <div className="mt-6 grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
           <AccountProfileSummary customer={customer} />
-          <AccountModuleCards modules={accountModules} />
+          <AccountWishlist />
+        </div>
+
+        <div className="mt-6">
+          <AccountRecentlyViewed />
         </div>
 
         <div className="mt-6 grid gap-5">

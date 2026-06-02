@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Heart, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 import { ProductImage } from "@/components/products/product-image";
+import { WishlistButton } from "@/components/products/wishlist-button";
 import { formatPrice, productHref } from "@/lib/product-utils";
 import type { Product } from "@/types/product";
 
@@ -15,7 +16,7 @@ export function ProductCard({
   const metaLabel = product.brandName ?? product.categoryName ?? "Kittik Beauty";
 
   return (
-    <article className="group h-full">
+    <article className="group relative h-full">
       <Link
         href={productHref(product)}
         className="block h-full overflow-hidden rounded-[22px] border border-brandGold/20 bg-white shadow-[0_10px_28px_rgba(0,69,31,0.05)] transition duration-300 hover:-translate-y-1 hover:border-brandGold/70 hover:shadow-[0_18px_45px_rgba(0,69,31,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brandGold focus-visible:ring-offset-4"
@@ -28,9 +29,6 @@ export function ProductCard({
             sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
-          <span className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-white/90 text-brandEmerald shadow-sm backdrop-blur">
-            <Heart className="size-4" aria-hidden="true" />
-          </span>
         </div>
 
         <div className="p-3.5 sm:p-4">
@@ -50,6 +48,7 @@ export function ProductCard({
           </div>
         </div>
       </Link>
+      <WishlistButton productId={product.id} className="absolute right-3 top-3 z-10" />
     </article>
   );
 }

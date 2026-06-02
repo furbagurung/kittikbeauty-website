@@ -1,3 +1,6 @@
+import { normalizeProduct } from "@/lib/api";
+import type { Product } from "@/types/product";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://kittikbeauty.com/api";
 
 export type CustomerOrderItem = {
@@ -146,4 +149,57 @@ export async function setDefaultCustomerAddress(token: string, id: number) {
   });
 
   return parseJsonResponse<{ message: string; address: CustomerAddress }>(response);
+}
+
+function normalizeProductList(values: unknown[]) {
+  return values.map(normalizeProduct).filter((product): product is Product => Boolean(product));
+}
+
+export async function getCustomerWishlist(token: string) {
+  const response = await fetch(customerAccountUrl("/customers/wishlist"), {
+    headers: customerHeaders(token),
+    cache: "no-store",
+  });
+
+  const payload = await parseJsonResponse<{ products: unknown[] }>(response);
+  return normalizeProductList(payload.products ?? []);
+}
+
+export async function addCustomerWishlistItem(token: string, productId: string | number) {
+  const response = await fetch(customerAccountUrl("/customers/wishlist"), {
+    method: "POST",
+    headers: customerHeaders(token),
+    body: JSON.stringify({ productId }),
+  });
+
+  return parseJsonResponse<{ message: string; productId: number }>(response);
+}
+
+export async function deleteCustomerWishlistItem(token: string, productId: string | number) {
+  const response = await fetch(customerAccountUrl(`/customers/wishlist/${productId}`), {
+    method: "DELETE",
+    headers: customerHeaders(token),
+  });
+
+  return parseJsonResponse<{ message: string; productId: number }>(response);
+}
+
+export async function getCustomerRecentlyViewed(token: string) {
+  const response = await fetch(customerAccountUrl("/customers/recently-viewed"), {
+    headers: customerHeaders(token),
+    cache: "no-store",
+  });
+
+  const payload = await parseJsonResponse<{ products: unknown[] }>(response);
+  return normalizeProductList(payload.products ?? []);
+}
+
+export async function trackCustomerRecentlyViewed(token: string, productId: string | number) {
+  const response = await fetch(customerAccountUrl("/customers/recently-viewed"), {
+    method: "POST",
+    headers: customerHeaders(token),
+    body: JSON.stringify({ productId }),
+  });
+
+  return parseJsonResponse<{ message: string; productId: number }>(response);
 }
