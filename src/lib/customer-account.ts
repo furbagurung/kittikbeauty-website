@@ -1,4 +1,5 @@
 import { normalizeProduct } from "@/lib/api";
+import { getCustomerMe, getStoredCustomerToken } from "@/lib/customer-auth";
 import type { Product } from "@/types/product";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://kittikbeauty.com/api";
@@ -57,6 +58,32 @@ export type CustomerAddressPayload = {
   isDefault?: boolean;
 };
 
+export type CheckoutOrderItemPayload = {
+  id?: number | string;
+  productId?: number | string;
+  variantId?: number | string;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
+export type CheckoutAddressPayload = CustomerAddressPayload & {
+  address?: string;
+};
+
+export type CheckoutOrderPayload = {
+  items: CheckoutOrderItemPayload[];
+  paymentMethod: string;
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  totalItems: number;
+  status?: string;
+  savedAddressId?: number;
+  saveAddress?: boolean;
+  isDefault?: boolean;
+} & Partial<CheckoutAddressPayload>;
+
 function customerAccountUrl(path: string) {
   return `${API_URL}${path}`;
 }
@@ -80,6 +107,14 @@ function customerHeaders(token: string) {
     "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: `Bearer ${token}`,
+  };
+}
+
+function optionalCustomerHeaders(token?: string | null) {
+  return {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 }
 
@@ -149,6 +184,59 @@ export async function setDefaultCustomerAddress(token: string, id: number) {
   });
 
   return parseJsonResponse<{ message: string; address: CustomerAddress }>(response);
+}
+
+export function selectDefaultCustomerAddress(addresses: CustomerAddress[]) {
+  return addresses.find((address) => address.isDefault) ?? addresses[0] ?? null;
+}
+
+export function normalizeCheckoutAddressPayload(
+  address: CustomerAddress | CustomerAddressPayload,
+): CheckoutAddressPayload {
+  return {
+    fullName: address.fullName,
+    phone: address.phone,
+    addressLine1: address.addressLine1,
+    addressLine2: address.addressLine2 ?? undefined,
+    city: address.city,
+    area: address.area ?? undefined,
+    landmark: address.landmark ?? undefined,
+    province: address.province ?? undefined,
+    isDefault: address.isDefault,
+  };
+}
+
+export async function getCustomerCheckoutState(token = getStoredCustomerToken()) {
+  if (!token) {
+    return {
+      token: null,
+      customer: null,
+      addresses: [] as CustomerAddress[],
+      defaultAddress: null as CustomerAddress | null,
+    };
+  }
+
+  const [customer, addresses] = await Promise.all([getCustomerMe(token), getCustomerAddresses(token)]);
+
+  return {
+    token,
+    customer,
+    addresses,
+    defaultAddress: selectDefaultCustomerAddress(addresses),
+  };
+}
+
+export async function createCheckoutOrder(payload: CheckoutOrderPayload, token = getStoredCustomerToken()) {
+  const safePayload = { ...payload } as CheckoutOrderPayload & { customerId?: unknown };
+  delete safePayload.customerId;
+
+  const response = await fetch(customerAccountUrl("/orders"), {
+    method: "POST",
+    headers: optionalCustomerHeaders(token),
+    body: JSON.stringify(safePayload),
+  });
+
+  return parseJsonResponse<CustomerOrderDetail>(response);
 }
 
 function normalizeProductList(values: unknown[]) {
