@@ -26,6 +26,17 @@ type CustomerAuthPayload = {
   password: string;
 };
 
+export type CustomerProfilePayload = {
+  fullName: string;
+  phone?: string;
+};
+
+export type CustomerPasswordPayload = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 function isBrowser() {
   return typeof window !== "undefined";
 }
@@ -127,6 +138,34 @@ export async function logoutCustomer(token: string) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
+  });
+
+  return parseJsonResponse<{ message: string }>(response);
+}
+
+export async function updateCustomerProfile(token: string, payload: CustomerProfilePayload) {
+  const response = await fetch(customerAuthUrl("/customers/profile"), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return parseJsonResponse<{ message: string; customer: Customer }>(response);
+}
+
+export async function changeCustomerPassword(token: string, payload: CustomerPasswordPayload) {
+  const response = await fetch(customerAuthUrl("/customers/change-password"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
   });
 
   return parseJsonResponse<{ message: string }>(response);

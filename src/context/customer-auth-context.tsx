@@ -18,7 +18,9 @@ import {
   logoutCustomer,
   registerCustomer,
   setStoredCustomerSession,
+  updateCustomerProfile,
   type Customer,
+  type CustomerProfilePayload,
 } from "@/lib/customer-auth";
 
 type AuthStatus = "loading" | "authenticated" | "unauthenticated";
@@ -41,6 +43,7 @@ type CustomerAuthContextValue = {
   register: (payload: RegisterPayload) => Promise<Customer>;
   logout: () => Promise<void>;
   refreshCustomer: () => Promise<void>;
+  updateProfile: (payload: CustomerProfilePayload) => Promise<Customer>;
 };
 
 const CustomerAuthContext = createContext<CustomerAuthContextValue | null>(null);
@@ -111,6 +114,22 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
     }
   }, [clearSession, token]);
 
+  const updateProfile = useCallback(
+    async (payload: CustomerProfilePayload) => {
+      const currentToken = token ?? getStoredCustomerToken();
+
+      if (!currentToken) {
+        clearSession();
+        throw new Error("Customer login required");
+      }
+
+      const response = await updateCustomerProfile(currentToken, payload);
+      applySession(currentToken, response.customer);
+      return response.customer;
+    },
+    [applySession, clearSession, token],
+  );
+
   const value = useMemo<CustomerAuthContextValue>(
     () => ({
       customer,
@@ -120,8 +139,9 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
       register,
       logout,
       refreshCustomer,
+      updateProfile,
     }),
-    [customer, login, logout, refreshCustomer, register, status, token],
+    [customer, login, logout, refreshCustomer, register, status, token, updateProfile],
   );
 
   return <CustomerAuthContext.Provider value={value}>{children}</CustomerAuthContext.Provider>;
